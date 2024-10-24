@@ -124,4 +124,18 @@
         </plugins>
     </build>
 
+         <!-- Deploy to Nexus -->
+         <distributionManagement>
+             <repository>
+                 <id>deploymentRepo</id>
+                 <name>Nexus Repository</name>
+                 <url>http://localhost:8081/repository/maven-releases/</url> <!-- For release versions -->
+             </repository>
+             <snapshotRepository>
+                 <id>deploymentRepo</id>
+                 <name>Nexus Repository</name>
+                 <url>http://localhost:8081/repository/maven-snapshots/</url> <!-- For snapshot versions -->
+             </snapshotRepository>
+         </distributionManagement>
+
 </project>
