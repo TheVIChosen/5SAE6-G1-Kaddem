@@ -4,7 +4,7 @@ services:
   sonarqube:
     image: sonarqube:latest
     ports:
-      - "9000:9000"
+      - "9001:9000"
     environment:
       - SONAR_JDBC_URL=jdbc:mysql://host.docker.internal:3306/your_database
       - SONAR_JDBC_USERNAME=root
