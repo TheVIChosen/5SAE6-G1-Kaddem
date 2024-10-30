@@ -10,6 +10,9 @@ public class KaddemApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(KaddemApplication.class, args);
+
+        System.out.println("Okk Kaddem ...");
+
     }
 
 }
