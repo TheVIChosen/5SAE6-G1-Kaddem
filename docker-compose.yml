@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  sonarqube:
+    image: sonarqube:latest
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_JDBC_URL=jdbc:mysql://host.docker.internal:3306/your_database
+      - SONAR_JDBC_USERNAME=root
+      - SONAR_JDBC_PASSWORD=nader
+
+  nexus:
+    image: sonatype/nexus3:latest
+    ports:
+      - "8081:8081"
