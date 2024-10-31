@@ -29,18 +29,19 @@ services:
 
   prometheus:
     image: prom/prometheus
-    ports:
-      - "9090:9090"  # Accessible on http://10.0.2.15:9090
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    network_mode: "host"
-
-  kaddem-app:
-    image: naderouali/kaddem:latest  # Pulls the latest image from Docker Hub
-    ports:
-      - "8089:8089"  # Expose port 8089 for Prometheus to access
     networks:
       - monitoring_network
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  kaddem-app:
+    image: naderouali/kaddem:latest
+    networks:
+      - monitoring_network
+    ports:
+      - "8089:8089"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prometheus
 
 volumes:
   grafana-storage:
