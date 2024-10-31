@@ -12,3 +12,7 @@ scrape_configs:
     metrics_path: '/metrics'  # Grafana's metrics endpoint
     static_configs:
       - targets: ['localhost:3000']
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
