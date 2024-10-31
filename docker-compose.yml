@@ -29,10 +29,11 @@ services:
 
   prometheus:
     image: prom/prometheus
-    networks:
-      - monitoring_network
+    ports:
+      - "9090:9090"  # Accessible on http://10.0.2.15:9090
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    network_mode: "host"
 
   kaddem-app:
     image: naderouali/kaddem:latest
