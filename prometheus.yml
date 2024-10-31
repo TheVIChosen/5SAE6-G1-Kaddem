@@ -20,4 +20,4 @@ scrape_configs:
   - job_name: 'kaddem'
     metrics_path: '/Kaddem/actuator/prometheus'  # Update path for Spring Boot actuator
     static_configs:
-      - targets: ['localhost:8089']
+      - targets: ['kaddem-app:8089']
