@@ -36,9 +36,9 @@ services:
     network_mode: "host"
 
   kaddem-app:
-    build: .
+    image: naderouali/kaddem:latest  # Pulls the latest image from Docker Hub
     ports:
-      - "8089:8089"
+      - "8089:8089"  # Expose port 8089 for Prometheus to access
     networks:
       - monitoring_network
 
