@@ -69,7 +69,7 @@
             <scope>test</scope>
         </dependency>
 
-         <!-- Prometheus -->
+         <!-- Spring Actuator for Prometheus -->
          <dependency>
              <groupId>org.springframework.boot</groupId>
              <artifactId>spring-boot-starter-actuator</artifactId>
