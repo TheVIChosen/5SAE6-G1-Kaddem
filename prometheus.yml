@@ -18,6 +18,5 @@ scrape_configs:
       - targets: ['localhost:9090']
 
   - job_name: 'kaddem'
-    metrics_path: '/Kaddem/actuator/prometheus'
     static_configs:
       - targets: ['kaddem-app:8089']
