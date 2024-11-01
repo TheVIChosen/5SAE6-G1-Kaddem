@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-    DOCKERHUB_USERNAME = "saiditayssir" 
+    DOCKERHUB_USERNAME = "saiditayssir"
   }
 
     stages {
@@ -16,10 +16,10 @@ pipeline {
        // url: 'https://github.com/SaidiTA/5SAE6_G1_Kaddem'
      // }
    // }
-   
-    
-        
-    
+
+
+
+
     stage("Clone from Git") {
         steps {
             git url: 'git@github.com:TheVIChosen/5SAE6-G1-Kaddem.git',
@@ -59,9 +59,9 @@ pipeline {
                 }
             }
         }*/
-       
+
   stage('Static Analysis') {
-        
+
             //environment {
             //    SONAR_URL = "http://192.168.100.11:9000/"
             //    SONAR_TOKEN = "sqp_40cb2dfefc432f64ac7cc2f21ae379d40924b0e7"
@@ -77,12 +77,12 @@ pipeline {
         -Dsonar.java.binaries=target/classes \
         -Dsonar.sources=src/main/java \
         -Dsonar.host.url=http://192.168.100.11:9000/"
-        
-                
+
+
                 }
             }
         }
-    
+
      stage('Upload to Nexus') {
             steps {
                 script {
@@ -125,7 +125,7 @@ pipeline {
         stage('Docker Login') {
             steps {
                 echo 'Logging into DockerHub...'
-                withCredentials([usernamePassword(credentialsId: 'docker', 
+                withCredentials([usernamePassword(credentialsId: 'docker',
                   usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
                     sh "docker login -u \$DOCKERHUB_USERNAME -p \$DOCKERHUB_PASSWORD"
                 }
@@ -135,7 +135,7 @@ pipeline {
         stage('Docker Push') {
             steps {
                 echo 'Pushing Docker image to DockerHub...'
-                withCredentials([usernamePassword(credentialsId: 'docker', 
+                withCredentials([usernamePassword(credentialsId: 'docker',
                   usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
                     sh "docker push saiditayssir/springboot-app:v1.0.0"
                 }
