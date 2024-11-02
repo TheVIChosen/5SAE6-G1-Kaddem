@@ -61,28 +61,23 @@ pipeline {
         }*/
 
   stage('Static Analysis') {
-
-            //environment {
-            //    SONAR_URL = "http://192.168.100.11:9000/"
-            //    SONAR_TOKEN = "sqp_40cb2dfefc432f64ac7cc2f21ae379d40924b0e7"
-           // }
-           environment {
-                scannerHome = tool 'sonnarqubeScanner';
-            }
-            steps {
-                 withSonarQubeEnv(credentialsId: 'token_sonar', installationName: 'Sonarqube') {
-                  //  sh 'mvn sonar:sonar -Dsonar.token=${SONAR_TOKEN} -Dsonar.host.url=${SONAR_URL} -Dsonar.java.binaries=target/classes'
-               sh "${scannerHome}/bin/sonar-scanner \
-        -Dsonar.projectKey=backend_kaddem \
-        -Dsonar.java.binaries=target/classes \
-        -Dsonar.sources=src/main/java \
-        -Dsonar.host.url=http://192.168.100.11:9000/ \
-	-Dsonar.login=${SONAR_TOKEN}"
-
-
-                }
+    environment {
+        scannerHome = tool 'sonnarqubeScanner'
+    }
+    steps {
+        withCredentials([string(credentialsId: 'token_sonar', variable: 'SONAR_TOKEN')]) {
+            withSonarQubeEnv('Sonarqube') {
+                sh "${scannerHome}/bin/sonar-scanner \
+                    -Dsonar.projectKey=backend_kaddem \
+                    -Dsonar.java.binaries=target/classes \
+                    -Dsonar.sources=src/main/java \
+                    -Dsonar.host.url=http://192.168.100.11:9000 \
+                    -Dsonar.login=${SONAR_TOKEN}"
             }
         }
+    }
+}
+
 
      stage('Upload to Nexus') {
             steps {
