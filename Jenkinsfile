@@ -1,94 +1,88 @@
 pipeline {
     agent any
     environment {
-        DOCKERHUB_USERNAME = "saiditayssir"
-        BASE_VERSION = "1.0.0" // Starting version
-    }
+    DOCKERHUB_USERNAME = "saiditayssir"
+  }
 
     stages {
-        stage('Get Started') {
-            steps {
-                echo "Start Building Pipeline"
-            }
-        }
-        
-        stage("Clone from Git") {
-            steps {
-                git url: 'git@github.com:TheVIChosen/5SAE6-G1-Kaddem.git',
-                credentialsId: 'git',
-                branch: 'saiditayssir_5sae6_g1'
-            }
-        }
+         stage('Get Started') {
+      steps {
+        echo "Start Building Pipeline"
+      }
+    }
+    // stage('GIT Checkout') {
+     // steps {
+      //  git branch: 'master',
+       // url: 'https://github.com/SaidiTA/5SAE6_G1_Kaddem'
+     // }
+   // }
 
-        stage('Increment Version') {
-            steps {
+
+
+
+    stage("Clone from Git") {
+        steps {
+            git url: 'git@github.com:TheVIChosen/5SAE6-G1-Kaddem.git',
+            credentialsId: 'git',
+            branch: 'saiditayssir_5sae6_g1'
+        }
+    }
+    stage('Status Mysql') {
+        steps {
                 script {
-                    // Check if version.txt exists
-                    def versionFile = 'version.txt'
-                    if (fileExists(versionFile)) {
-                        // Read the current version
-                        def currentVersion = readFile(versionFile).trim()
-                        echo "Current version: ${currentVersion}"
-
-                        // Increment the version (simple patch increment)
-                        def (major, minor, patch) = currentVersion.tokenize('.').collect { it as int }
-                        patch += 1 // Increment the patch version
-                        def newVersion = "${major}.${minor}.${patch}"
-                        writeFile file: versionFile, text: newVersion // Update the version file
-                        echo "New version: ${newVersion}"
-
-                        // Use the new version for later stages
-                        env.NEXUS_VERSION = newVersion
-                    } else {
-                        // If the version file does not exist, create it with the base version
-                        writeFile file: versionFile, text: BASE_VERSION
-                        env.NEXUS_VERSION = BASE_VERSION
-                        echo "Version file created with base version: ${BASE_VERSION}"
-                    }
+                    sh 'docker start dbmysql_new'
                 }
-            }
         }
-
-        stage('Status Mysql') {
-            steps {
-                sh 'docker start dbmysql_new'
-            }
-        }
-
+    }
         stage('Clean') {
             steps {
+                echo 'Cleaning previous builds and cache...'
                 sh 'mvn clean'
             }
         }
 
         stage('Build') {
             steps {
+                echo 'Building the Spring Boot application...'
                 sh 'mvn package'
             }
         }
-
-        stage('Static Analysis') {
-            environment {
-                scannerHome = tool 'sonnarqubeScanner'
-            }
+   /*     stage("Run Tests with JUnit") {
             steps {
-                withCredentials([string(credentialsId: 'token_sonar_backend', variable: 'SONAR_TOKEN')]) {
-                    withSonarQubeEnv('Sonarqube') {
-                        sh "${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.projectKey=backend_kaddem \
-                            -Dsonar.java.binaries=target/classes \
-                            -Dsonar.sources=src/main/java \
-                            -Dsonar.host.url=http://192.168.100.11:9000 \
-                            -Dsonar.login=${SONAR_TOKEN}"
-                    }
+                // Runs JUnit tests and generates JaCoCo coverage reports
+                sh "mvn test jacoco:report"
+            }
+            post {
+                // Publish JUnit test results in Jenkins
+                always {
+                    junit 'target/surefire-reports/*.xml'
                 }
             }
-        }
+        }*/
 
-        stage('Upload to Nexus') {
+  stage('Static Analysis') {
+    environment {
+        scannerHome = tool 'sonnarqubeScanner'
+    }
+    steps {
+        withCredentials([string(credentialsId: 'token_sonar_backend', variable: 'SONAR_TOKEN')]) {
+            withSonarQubeEnv('Sonarqube') {
+                sh "${scannerHome}/bin/sonar-scanner \
+                    -Dsonar.projectKey=backend_kaddem \
+                    -Dsonar.java.binaries=target/classes \
+                    -Dsonar.sources=src/main/java \
+                    -Dsonar.host.url=http://192.168.100.11:9000 \
+                    -Dsonar.login=${SONAR_TOKEN}"
+            }
+        }
+    }
+}
+
+
+     stage('Upload to Nexus') {
             steps {
                 script {
-                    echo "Deploying to Nexus with version ${NEXUS_VERSION}..."
+                    echo "Deploying to Nexus..."
 
                     nexusArtifactUploader(
                         nexusVersion: 'nexus3',
@@ -97,7 +91,7 @@ pipeline {
                         repository: 'back_end_repo',
                         credentialsId: 'nexus',
                         groupId: 'tn.esprit.spring',
-                        version: "${NEXUS_VERSION}",
+                        version: '1.0.1',
                         artifacts: [
                             [
                                 artifactId: 'kaddem',
@@ -114,14 +108,21 @@ pipeline {
         }
 
         stage('Docker Image') {
-            steps {
-                sh "docker build -t saiditayssir/springboot-app:v${NEXUS_VERSION} -f Dockerfile ."
-            }
+           // steps {
+            //    echo 'Building Docker image for Spring Boot...'
+           //     sh 'docker build -t saiditayssir/springboot-app:v1.0.0 . '
+          //  }
+          steps {
+    echo 'Building Docker image for Spring Boot...'
+    sh 'docker build -t saiditayssir/springboot-app:v1.0.0 -f Dockerfile .'
+}
         }
 
         stage('Docker Login') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                echo 'Logging into DockerHub...'
+                withCredentials([usernamePassword(credentialsId: 'docker',
+                  usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
                     sh "docker login -u \$DOCKERHUB_USERNAME -p \$DOCKERHUB_PASSWORD"
                 }
             }
@@ -129,15 +130,18 @@ pipeline {
 
         stage('Docker Push') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
-                    sh "docker push saiditayssir/springboot-app:v${NEXUS_VERSION}"
+                echo 'Pushing Docker image to DockerHub...'
+                withCredentials([usernamePassword(credentialsId: 'docker',
+                  usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                    sh "docker push saiditayssir/springboot-app:v1.0.0"
                 }
             }
         }
     }
-    post {
+     post {
         always {
             jacoco execPattern: 'target/jacoco.exec'
+           // junit '**/target/surefire-reports/*.xml'
         }
     }
 }
