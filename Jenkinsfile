@@ -65,7 +65,7 @@ pipeline {
         scannerHome = tool 'sonnarqubeScanner'
     }
     steps {
-        withCredentials([string(credentialsId: 'token_sonar', variable: 'SONAR_TOKEN')]) {
+        withCredentials([string(credentialsId: 'token_sonar_backend', variable: 'SONAR_TOKEN')]) {
             withSonarQubeEnv('Sonarqube') {
                 sh "${scannerHome}/bin/sonar-scanner \
                     -Dsonar.projectKey=backend_kaddem \
