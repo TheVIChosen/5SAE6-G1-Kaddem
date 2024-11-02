@@ -76,7 +76,8 @@ pipeline {
         -Dsonar.projectKey=backend_kaddem \
         -Dsonar.java.binaries=target/classes \
         -Dsonar.sources=src/main/java \
-        -Dsonar.host.url=http://192.168.100.11:9000/"
+        -Dsonar.host.url=http://192.168.100.11:9000/ \
+	-Dsonar.login=${SONAR_TOKEN}"
 
 
                 }
