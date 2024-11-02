@@ -91,7 +91,7 @@ pipeline {
                         repository: 'back_end_repo',
                         credentialsId: 'nexus',
                         groupId: 'tn.esprit.spring',
-                        version: '1.0.1',
+                        version: '1.0.2',
                         artifacts: [
                             [
                                 artifactId: 'kaddem',
@@ -135,6 +135,12 @@ pipeline {
                   usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
                     sh "docker push saiditayssir/springboot-app:v1.0.0"
                 }
+            }
+        }
+        stage('slack notification') {
+            ///
+            steps{
+                slackSend channel: '#thevchosen', message: "Successful completition of ${env.JOB_NAME}", teamDomain: 'devops-d4e9866', tokenCredentialId: 'slack1'
             }
         }
     }
