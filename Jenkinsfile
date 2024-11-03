@@ -34,6 +34,13 @@ pipeline {
                 }
         }
     }
+   stage("Start Docker Compose Services") {
+            steps {
+                script {
+                    sh 'docker compose -f ./docker-compose.yml up -d'
+                }
+            }
+        }
         stage('Clean') {
             steps {
                 echo 'Cleaning previous builds and cache...'
@@ -91,7 +98,7 @@ pipeline {
                         repository: 'back_end_repo',
                         credentialsId: 'nexus',
                         groupId: 'tn.esprit.spring',
-                        version: '1.0.2',
+                        version: '1.0.3',
                         artifacts: [
                             [
                                 artifactId: 'kaddem',
