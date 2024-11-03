@@ -10,6 +10,7 @@ services:
       - "3306:3306"
     networks:
       - kaddem-network
+      - monitoring_network
       
   sonarqube:
     image: sonarqube:latest
@@ -17,7 +18,7 @@ services:
     ports:
       - "9001:9000"
     environment:
-      - SONAR_JDBC_URL=jdbc:mysql://localhost:3306/kaddem\db?&createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      - SONAR_JDBC_URL=jdbc:mysql://localhost:3306/kaddemdb?&createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
       - SONAR_JDBC_USERNAME=root
       - SONAR_JDBC_PASSWORD=0000
 
@@ -49,16 +50,23 @@ services:
 
   kaddem-app:
     image: naderouali/kaddem:latest
+    depends_on:
+      - mysql-container  # Ensure MySQL starts first
     networks:
-      - monitoring_network
+      - monitoring_network  # Keep using the monitoring network
     ports:
       - "8089:8089"
     environment:
       - SPRING_PROFILES_ACTIVE=prometheus
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/kaddemdb?&createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=0000
 
 volumes:
   grafana-storage:
 
 networks:
   monitoring_network:
+    driver: bridge
+  kaddem-network:
     driver: bridge
