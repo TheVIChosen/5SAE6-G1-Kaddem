@@ -52,6 +52,7 @@ services:
       - mysql-container  # Ensure MySQL starts first
     networks:
       - monitoring_network  # Keep using the monitoring network
+      - kaddem-network
     ports:
       - "8089:8089"
     environment:
