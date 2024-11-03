@@ -27,14 +27,6 @@ pipeline {
             }
         }
 
-        stage("Start Docker Compose Services") {
-            steps {
-                script {
-                    sh 'docker compose -f ./docker-compose.yml up -d'
-                }
-            }
-        }
-
         stage('Clean') {
             steps {
                 echo 'Cleaning previous builds and cache...'
@@ -121,6 +113,17 @@ pipeline {
                 }
             }
         }
+	
+
+	stage('Docker compose (BackEnd MySql)') {
+            steps {
+                script {
+                    sh 'sudo systemctl stop mysql'
+                    sh 'docker-compose up -d'
+                }
+            }
+        }
+
 
         stage('Slack Notification') {
             steps {
