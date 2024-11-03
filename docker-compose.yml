@@ -9,6 +9,11 @@ services:
     networks:
       - kaddem-network
       - monitoring_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
       
   sonarqube:
     image: sonarqube:latest
