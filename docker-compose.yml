@@ -3,6 +3,7 @@ version: '3.8'
 services:
   sonarqube:
     image: sonarqube:latest
+    restart: unless-stopped
     ports:
       - "9001:9000"
     environment:
@@ -12,6 +13,7 @@ services:
 
   nexus:
     image: sonatype/nexus3:latest
+    restart: unless-stopped
     ports:
       - "8082:8081"
     volumes:
