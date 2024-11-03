@@ -118,7 +118,7 @@ pipeline {
 	stage('Docker compose (BackEnd MySql)') {
             steps {
                 script {
-                    sh 'sudo systemctl stop mysql'
+                    sh 'docker stop dbmysql_new'
                     sh 'docker-compose up -d'
                 }
             }
