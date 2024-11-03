@@ -70,7 +70,7 @@ pipeline {
                         repository: 'back_end_repo',
                         credentialsId: 'nexus',
                         groupId: 'tn.esprit.spring',
-                        version: '1.0.5',
+                        version: '1.0.6',
                         artifacts: [
                             [
                                 artifactId: 'kaddem',
@@ -115,14 +115,14 @@ pipeline {
         }
 	
 
-	stage('Docker compose (BackEnd MySql)') {
-            steps {
-                script {
-                    sh 'docker stop dbmysql_new'
-                    sh 'docker compose up -d'
-                }
-            }
-        }
+	//stage('Docker compose (BackEnd MySql)') {
+       //     steps {
+       //         script {
+       //             sh 'docker stop dbmysql_new'
+        //            sh 'docker compose up -d'
+       //         }
+       //     }
+      //  }
 
 
         stage('Slack Notification') {
