@@ -119,7 +119,7 @@ pipeline {
             steps {
                 script {
                     sh 'docker stop dbmysql_new'
-                    sh 'docker-compose up -d'
+                    sh 'docker compose up -d'
                 }
             }
         }
