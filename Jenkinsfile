@@ -1,46 +1,40 @@
 pipeline {
     agent any
     environment {
-    DOCKERHUB_USERNAME = "saiditayssir"
-  }
+        DOCKERHUB_USERNAME = "saiditayssir"
+    }
 
     stages {
-         stage('Get Started') {
-      steps {
-        echo "Start Building Pipeline"
-      }
-    }
-    // stage('GIT Checkout') {
-     // steps {
-      //  git branch: 'master',
-       // url: 'https://github.com/SaidiTA/5SAE6_G1_Kaddem'
-     // }
-   // }
-
-
-
-
-    stage("Clone from Git") {
-        steps {
-            git url: 'git@github.com:TheVIChosen/5SAE6-G1-Kaddem.git',
-            credentialsId: 'git',
-            branch: 'saiditayssir_5sae6_g1'
+        stage('Get Started') {
+            steps {
+                echo "Start Building Pipeline"
+            }
         }
-    }
-    stage('Status Mysql') {
-        steps {
+
+        stage("Clone from Git") {
+            steps {
+                git url: 'git@github.com:TheVIChosen/5SAE6-G1-Kaddem.git',
+                    credentialsId: 'git',
+                    branch: 'saiditayssir_5sae6_g1'
+            }
+        }
+
+        stage('Status Mysql') {
+            steps {
                 script {
                     sh 'docker start dbmysql_new'
                 }
+            }
         }
-    }
-   stage("Start Docker Compose Services") {
+
+        stage("Start Docker Compose Services") {
             steps {
                 script {
                     sh 'docker compose -f ./docker-compose.yml up -d'
                 }
             }
         }
+
         stage('Clean') {
             steps {
                 echo 'Cleaning previous builds and cache...'
@@ -54,43 +48,29 @@ pipeline {
                 sh 'mvn package'
             }
         }
-   /*     stage("Run Tests with JUnit") {
-            steps {
-                // Runs JUnit tests and generates JaCoCo coverage reports
-                sh "mvn test jacoco:report"
+
+        stage('Static Analysis') {
+            environment {
+                scannerHome = tool 'sonnarqubeScanner'
             }
-            post {
-                // Publish JUnit test results in Jenkins
-                always {
-                    junit 'target/surefire-reports/*.xml'
+            steps {
+                withCredentials([string(credentialsId: 'token_sonar_backend', variable: 'SONAR_TOKEN')]) {
+                    withSonarQubeEnv('Sonarqube') {
+                        sh "${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=backend_kaddem \
+                            -Dsonar.java.binaries=target/classes \
+                            -Dsonar.sources=src/main/java \
+                            -Dsonar.host.url=http://192.168.100.11:9000 \
+                            -Dsonar.login=${SONAR_TOKEN}"
+                    }
                 }
             }
-        }*/
-
-  stage('Static Analysis') {
-    environment {
-        scannerHome = tool 'sonnarqubeScanner'
-    }
-    steps {
-        withCredentials([string(credentialsId: 'token_sonar_backend', variable: 'SONAR_TOKEN')]) {
-            withSonarQubeEnv('Sonarqube') {
-                sh "${scannerHome}/bin/sonar-scanner \
-                    -Dsonar.projectKey=backend_kaddem \
-                    -Dsonar.java.binaries=target/classes \
-                    -Dsonar.sources=src/main/java \
-                    -Dsonar.host.url=http://192.168.100.11:9000 \
-                    -Dsonar.login=${SONAR_TOKEN}"
-            }
         }
-    }
-}
 
-
-     stage('Upload to Nexus') {
+        stage('Upload to Nexus') {
             steps {
                 script {
                     echo "Deploying to Nexus..."
-
                     nexusArtifactUploader(
                         nexusVersion: 'nexus3',
                         protocol: 'http',
@@ -108,28 +88,24 @@ pipeline {
                             ]
                         ]
                     )
-
                     echo "Deployment to Nexus completed!"
                 }
             }
         }
 
         stage('Docker Image') {
-           // steps {
-            //    echo 'Building Docker image for Spring Boot...'
-           //     sh 'docker build -t saiditayssir/springboot-app:v1.0.0 . '
-          //  }
-          steps {
-    echo 'Building Docker image for Spring Boot...'
-    sh 'docker build -t saiditayssir/springboot-app:v1.0.0 -f Dockerfile .'
-}
+            steps {
+                echo 'Building Docker image for Spring Boot...'
+                sh 'docker build -t saiditayssir/springboot-app:v1.0.0 -f Dockerfile .'
+            }
         }
 
         stage('Docker Login') {
             steps {
                 echo 'Logging into DockerHub...'
                 withCredentials([usernamePassword(credentialsId: 'docker',
-                  usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                                                  usernameVariable: 'DOCKERHUB_USERNAME', 
+                                                  passwordVariable: 'DOCKERHUB_PASSWORD')]) {
                     sh "docker login -u \$DOCKERHUB_USERNAME -p \$DOCKERHUB_PASSWORD"
                 }
             }
@@ -139,22 +115,23 @@ pipeline {
             steps {
                 echo 'Pushing Docker image to DockerHub...'
                 withCredentials([usernamePassword(credentialsId: 'docker',
-                  usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                                                  usernameVariable: 'DOCKERHUB_USERNAME', 
+                                                  passwordVariable: 'DOCKERHUB_PASSWORD')]) {
                     sh "docker push saiditayssir/springboot-app:v1.0.0"
                 }
             }
         }
-        stage('slack notification') {
-            ///
-            steps{
-                slackSend channel: '#thevchosen', message: "Successful completition of ${env.JOB_NAME}", teamDomain: 'devops-d4e9866', tokenCredentialId: 'slack1'
+
+        stage('Slack Notification') {
+            steps {
+                slackSend channel: '#thevchosen', message: "Successful completion of ${env.JOB_NAME}", teamDomain: 'devops-d4e9866', tokenCredentialId: 'slack1'
             }
         }
     }
-     post {
+
+    post {
         always {
             jacoco execPattern: 'target/jacoco.exec'
-           // junit '**/target/surefire-reports/*.xml'
         }
     }
 }
