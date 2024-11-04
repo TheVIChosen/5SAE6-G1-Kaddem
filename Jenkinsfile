@@ -176,16 +176,29 @@ pipeline {
                     // Ensure the latest image is pulled from Docker Hub
                     sh "docker pull ${DOCKER_IMAGE_NAME}"
                     
+                    // Check if port 8089 is free
+                    def portInUse = sh(script: "lsof -i :8089", returnStatus: true) == 0
+        
+                    def assignedPort = "8089" // Default port
+                    if (portInUse) {
+                        echo "Port 8089 is already in use. Assigning a different port."
+                        // Find an available port between 8000 and 9000
+                        assignedPort = sh(script: "comm -23 <(seq 8000 9000) <(ss -tan | awk '{print \$4}' | cut -d':' -f2) | head -n 1", returnStdout: true).trim()
+                        echo "Using dynamic port: ${assignedPort}"
+                    } else {
+                        echo "Port 8089 is free. Running container on port 8089."
+                    }
+                    
                     // Check if a container with this image is already running
                     def containerId = sh(script: "docker ps -aqf 'ancestor=${DOCKER_IMAGE_NAME}'", returnStdout: true).trim()
                     
                     if (containerId) {
-                        echo "Starting the existing container for '${DOCKER_IMAGE_NAME}'"
+                        echo "Starting the existing container for '${DOCKER_IMAGE_NAME}' on port ${assignedPort}"
                         sh "docker start ${containerId}"
                     } else {
-                        echo "Running a new container from the pulled image '${DOCKER_IMAGE_NAME}'"
-                        // Run a new container from the pulled image with specific configurations
-                        sh "docker run -d -p 8089:8089 ${DOCKER_IMAGE_NAME}"
+                        echo "Running a new container from the pulled image '${DOCKER_IMAGE_NAME}' on port ${assignedPort}"
+                        // Run a new container from the pulled image with dynamic port assignment
+                        sh "docker run -d -p ${assignedPort}:8089 ${DOCKER_IMAGE_NAME}"
                     }
                 }
             }
