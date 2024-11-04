@@ -126,8 +126,14 @@ pipeline {
         
                     // Polling mechanism for quality gate status
                     def qualityGateStatus = 'PENDING'
-                    def maxRetries = 10 // Maximum number of retries
+                    def maxRetries = 20 // Maximum number of retries
                     def delayBetweenRetries = 30 // Delay between retries in seconds
+                    def taskId = "" // Variable to store task ID
+        
+                    // Retrieve the task ID from the previous analysis output
+                    def output = sh(script: "curl -s http://localhost:9000/api/ce/task?id=AZL49__GHqD7bLZPAk_u", returnStdout: true)
+                    def json = readJSON(text: output)
+                    taskId = json.taskId
         
                     for (int i = 0; i < maxRetries; i++) {
                         // Wait for the quality gate status
@@ -138,11 +144,13 @@ pipeline {
                             break
                         } else if (qualityGateStatus == 'ERROR') {
                             error "Quality gate failed with status: ${qualityGateStatus}"
+                        } else if (qualityGateStatus == 'PENDING') {
+                            echo "Quality gate status is still PENDING... waiting."
                         }
         
                         // If not yet OK, wait before checking again
                         sleep(delayBetweenRetries)
-                        echo "Waiting for quality gate status... (Attempt ${i + 1}/${maxRetries})"
+                        echo "Checking quality gate status... (Attempt ${i + 1}/${maxRetries})"
                     }
         
                     // Check if we've exhausted our retries
