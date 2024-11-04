@@ -21,13 +21,6 @@ pipeline {
     }
 
     stages {
-        stage("Clone from Git") {
-            steps {
-                git url: 'git@github.com:TheVIChosen/5SAE6-G1-Kaddem.git',
-                    credentialsId: 'github-ssh-key',
-                    branch: 'NaderOuali_5SAE6_G1'
-            }
-        }
         stage("Start MySQL") {
             steps {
                 script {
