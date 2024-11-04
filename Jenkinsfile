@@ -8,7 +8,7 @@ pipeline {
     
     environment {
         // MySQL environment variables
-        MYSQL_CONTAINER_NAME = "mysql-container"
+        MYSQL_CONTAINER_NAME = "mysql"
         MYSQL_IMAGE = "mysql:5.7"
         MYSQL_ROOT_PASSWORD = "0000"
         MYSQL_DATABASE = "kaddemdb"
