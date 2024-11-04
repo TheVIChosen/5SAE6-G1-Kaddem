@@ -195,6 +195,13 @@ pipeline {
     post {
         success {
             echo 'Build and tests were successful!'
+            emailext(
+                to: 'oualinader@gmail.com',
+                from: 'nader.ouali@esprit.tn', // Set the sender email address
+                replyTo: 'nader.ouali@esprit.tn', // Set the reply-to address
+                subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - SUCCESS",
+                body: "The build ${env.BUILD_NUMBER} has completed successfully.\nCheck details at: ${env.BUILD_URL}"
+            )
         }
         
         failure {
@@ -205,17 +212,7 @@ pipeline {
                 subject: "Jenkins Pipeline - Build #${env.BUILD_NUMBER} - FAILED",
                 body: """The build ${env.BUILD_NUMBER} has failed.
                          Check details at: ${env.BUILD_URL}""",
-                to: 'nader.ouali@esprit.tn'  // Recipient's email address
-            )
-        }
-    
-        always {
-            // This block sends an email regardless of success or failure
-            emailext (
-                subject: "Jenkins Pipeline - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
-                body: """The build ${env.BUILD_NUMBER} has completed with status: ${currentBuild.currentResult}.
-                         Check details at: ${env.BUILD_URL}""",
-                to: 'nader.ouali@esprit.tn'  // Recipient's email address
+                to: 'oualinader@gmail.com'  // Recipient's email address
             )
         }
     }
