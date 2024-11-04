@@ -206,13 +206,12 @@ pipeline {
         
         failure {
             echo 'Build or tests failed!'
-            
-            // Send email on failure
-            emailext (
-                subject: "Jenkins Pipeline - Build #${env.BUILD_NUMBER} - FAILED",
-                body: """The build ${env.BUILD_NUMBER} has failed.
-                         Check details at: ${env.BUILD_URL}""",
-                to: 'oualinader@gmail.com'  // Recipient's email address
+            emailext(
+                to: 'oualinader@gmail.com',
+                from: 'nader.ouali@esprit.tn', // Set the sender email address
+                replyTo: 'nader.ouali@esprit.tn', // Set the reply-to address
+                subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - FAILURE",
+                body: "The build ${env.BUILD_NUMBER} has failed.\nCheck details at: ${env.BUILD_URL}"
             )
         }
     }
