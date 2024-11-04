@@ -145,11 +145,24 @@ pipeline {
         stage("Push Docker Image to Docker Hub") {
             steps {
                 script {
-                    // Log in to Docker Hub
-                    sh "echo ${DOCKER_CREDENTIALS_PSW} | docker login -u ${DOCKER_CREDENTIALS_USR} --password-stdin"
-                    
-                    // Push the Docker image
-                    sh "docker push ${DOCKER_IMAGE_NAME}"
+                    try {
+                        // Ensure the Docker image exists before pushing
+                        def imageExists = sh(script: "docker images -q ${DOCKER_IMAGE_NAME}", returnStdout: true).trim()
+        
+                        if (!imageExists) {
+                            error "Docker image ${DOCKER_IMAGE_NAME} does not exist. Skipping push."
+                        }
+        
+                        // Log in to Docker Hub
+                        sh "echo ${DOCKER_CREDENTIALS_PSW} | docker login -u ${DOCKER_CREDENTIALS_USR} --password-stdin"
+        
+                        // Push the Docker image
+                        sh "docker push ${DOCKER_IMAGE_NAME}"
+                        echo "Successfully pushed Docker image '${DOCKER_IMAGE_NAME}' to Docker Hub."
+                    } catch (Exception e) {
+                        echo "Failed to push Docker image: ${e.getMessage()}"
+                        currentBuild.result = 'FAILURE' // Mark build as failed if push fails
+                    }
                 }
             }
         }
