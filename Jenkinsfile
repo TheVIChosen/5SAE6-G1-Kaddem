@@ -121,7 +121,26 @@ pipeline {
                 script {
                     // Use the SonarQube environment defined in Jenkins
                     withSonarQubeEnv('SonarQube') { // 'SonarQube' should match your configured SonarQube Server name
-                        sh "mvn sonar:sonar"
+                        // Set a timeout for the SonarQube analysis to prevent indefinite hanging
+                        timeout(time: 10, unit: 'MINUTES') {
+                            try {
+                                sh "mvn sonar:sonar"
+                            } catch (Exception e) {
+                                echo "SonarQube analysis failed: ${e.getMessage()}"
+                                // Optionally, you can fail the pipeline or allow it to continue
+                                currentBuild.result = 'UNSTABLE'
+                            }
+                        }
+                    }
+                }
+            }
+            post {
+                always {
+                    script {
+                        echo "Publishing SonarQube results..."
+                        // Publish the SonarQube results for visibility in Jenkins, if applicable
+                        // Requires SonarQube Jenkins Plugin
+                        sonarQubePublisher(autoMark: true)
                     }
                 }
             }
