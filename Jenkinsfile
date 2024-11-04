@@ -205,7 +205,7 @@ pipeline {
                 subject: "Jenkins Pipeline - Build #${env.BUILD_NUMBER} - FAILED",
                 body: """The build ${env.BUILD_NUMBER} has failed.
                          Check details at: ${env.BUILD_URL}""",
-                to: 'oualinader@gmail.com'  // Recipient's email address
+                to: 'nader.ouali@esprit.tn'  // Recipient's email address
             )
         }
     
@@ -215,7 +215,7 @@ pipeline {
                 subject: "Jenkins Pipeline - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
                 body: """The build ${env.BUILD_NUMBER} has completed with status: ${currentBuild.currentResult}.
                          Check details at: ${env.BUILD_URL}""",
-                to: 'oualinader@gmail.com'  // Recipient's email address
+                to: 'nader.ouali@esprit.tn'  // Recipient's email address
             )
         }
     }
