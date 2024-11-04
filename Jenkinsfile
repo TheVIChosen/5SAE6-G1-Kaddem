@@ -119,23 +119,35 @@ pipeline {
         stage("SonarQube Analysis and Quality Gate") {
             steps {
                 script {
-                    // Use the SonarQube environment defined in Jenkins
-                    withSonarQubeEnv('SonarQube') { // 'SonarQube' should match your SonarQube server name
-                        // Run the SonarQube analysis using Maven
+                    withSonarQubeEnv('SonarQube') { // Ensure 'SonarQube' matches your configured server name
+                        // Run SonarQube analysis using Maven
                         sh "mvn sonar:sonar"
                     }
-                    
-                    // Timeout for waiting for the quality gate result
-                    timeout(time: 2, unit: 'MINUTES') {
-                        // Wait for SonarQube quality gate result
-                        def qualityGate = waitForQualityGate()
         
-                        // Check if the quality gate passed or failed
-                        if (qualityGate.status != 'OK') {
-                            error "Pipeline aborted due to quality gate failure: ${qualityGate.status}"
-                        } else {
+                    // Polling mechanism for quality gate status
+                    def qualityGateStatus = 'PENDING'
+                    def maxRetries = 10 // Maximum number of retries
+                    def delayBetweenRetries = 30 // Delay between retries in seconds
+        
+                    for (int i = 0; i < maxRetries; i++) {
+                        // Wait for the quality gate status
+                        qualityGateStatus = waitForQualityGate().status
+        
+                        if (qualityGateStatus == 'OK') {
                             echo "Quality gate passed successfully!"
+                            break
+                        } else if (qualityGateStatus == 'ERROR') {
+                            error "Quality gate failed with status: ${qualityGateStatus}"
                         }
+        
+                        // If not yet OK, wait before checking again
+                        sleep(delayBetweenRetries)
+                        echo "Waiting for quality gate status... (Attempt ${i + 1}/${maxRetries})"
+                    }
+        
+                    // Check if we've exhausted our retries
+                    if (qualityGateStatus != 'OK') {
+                        error "Quality gate status is still '${qualityGateStatus}' after ${maxRetries} attempts."
                     }
                 }
             }
