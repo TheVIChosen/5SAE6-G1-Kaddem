@@ -249,7 +249,7 @@ pipeline {
                     echo "Stopping and removing any existing containers for '${DOCKER_IMAGE_NAME}'"
                     sh "docker stop \$(docker ps -aqf 'ancestor=${DOCKER_IMAGE_NAME}') || true"
                     sh "docker rm \$(docker ps -aqf 'ancestor=${DOCKER_IMAGE_NAME}') || true"
-                    
+        
                     // Step 2: Initialize port and retry mechanism
                     def assignedPort = "8089" // Default port
                     int maxRetries = 3
@@ -259,23 +259,23 @@ pipeline {
                     // Step 3: Attempt to start the container with retries
                     while (!started && retries < maxRetries) {
                         try {
-                            // Check if the default port 8089 is free, or assign a different port if needed
+                            // Check if the port is free; assign a different one if needed
                             def portInUse = sh(script: "lsof -i :${assignedPort}", returnStatus: true) == 0
                             if (portInUse) {
                                 echo "Port ${assignedPort} is already in use. Assigning a different port."
                                 assignedPort = sh(script: "comm -23 <(seq 8000 9000) <(ss -tan | awk '{print \$4}' | cut -d':' -f2) | head -n 1", returnStdout: true).trim()
                                 echo "Using dynamic port: ${assignedPort}"
                             } else {
-                                echo "Port ${assignedPort} is free. Proceeding to run the container."
+                                echo "Port ${assignedPort} is free. Running container on port ${assignedPort}."
                             }
         
-                            // Try to run the container with the specified port
+                            // Run the container on the selected port
                             echo "Attempting to start container '${DOCKER_IMAGE_NAME}' on port ${assignedPort} (Attempt ${retries + 1})"
                             sh "docker run -d -p ${assignedPort}:8089 ${DOCKER_IMAGE_NAME}"
-                            started = true // If successful, set started to true
+                            started = true // If successful, exit the loop
         
                         } catch (Exception e) {
-                            // Handle failure to start the container
+                            // If starting the container fails, retry with a new port
                             echo "Failed to start container on port ${assignedPort}. Retrying with a different port."
                             assignedPort = sh(script: "comm -23 <(seq 8000 9000) <(ss -tan | awk '{print \$4}' | cut -d':' -f2) | head -n 1", returnStdout: true).trim()
                             retries++
