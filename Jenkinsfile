@@ -226,7 +226,7 @@ pipeline {
             steps {
                 script {
                     // Deploys the Kaddem container using the image from Docker Hub
-                    sh 'docker compose -f ./docker-compose.yml up -d kaddem-app'
+                    sh 'docker compose -f ./docker-compose.yml up -d kaddem'
                 }
             }
         }
