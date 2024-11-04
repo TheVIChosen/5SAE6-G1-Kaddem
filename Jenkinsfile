@@ -196,25 +196,25 @@ pipeline {
         success {
             echo 'Build and tests were successful!'
         }
+        
         failure {
             echo 'Build or tests failed!'
-        }
-
-        // email
-        // Send email notification on any result
-        always {
+            
+            // Send email on failure
             emailext (
-                subject: "Jenkins Pipeline - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
-                body: "The build ${env.BUILD_NUMBER} has completed with status: ${currentBuild.currentResult}\n\nCheck details at: ${env.BUILD_URL}",
+                subject: "Jenkins Pipeline - Build #${env.BUILD_NUMBER} - FAILED",
+                body: """The build ${env.BUILD_NUMBER} has failed.
+                         Check details at: ${env.BUILD_URL}""",
                 to: 'oualinader@gmail.com'  // Recipient's email address
             )
         }
-
-        // OR send email only on failure
-        failure {
+    
+        always {
+            // This block sends an email regardless of success or failure
             emailext (
                 subject: "Jenkins Pipeline - Build #${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
-                body: "The build ${env.BUILD_NUMBER} has failed.\n\nCheck details at: ${env.BUILD_URL}",
+                body: """The build ${env.BUILD_NUMBER} has completed with status: ${currentBuild.currentResult}.
+                         Check details at: ${env.BUILD_URL}""",
                 to: 'oualinader@gmail.com'  // Recipient's email address
             )
         }
