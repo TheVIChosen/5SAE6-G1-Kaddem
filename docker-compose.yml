@@ -1,14 +1,26 @@
 version: '3.8'
 
 services:
-  mysql-container:
-    image: mysql:latest
+  #mysql-container:
+    #image: mysql:latest
+    #environment:
+      #MYSQL_ROOT_PASSWORD: 0000
+      #MYSQL_DATABASE: kaddemdb
+    #networks:
+      #- kaddem-network
+      #- monitoring_network
+
+  mysql:
+    image: "mysql:5.7"
+    container_name: mysql
     environment:
-      MYSQL_ROOT_PASSWORD: 0000
-      MYSQL_DATABASE: kaddemdb
-    networks:
-      - kaddem-network
-      - monitoring_network
+      - MYSQL_ROOT_PASSWORD=0000
+      - MYSQL_DATABASE=kaddemdb  # Use your database name
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    volumes:
+      - db:/var/lib/mysql  # Persistent storage for MySQL
       
   sonarqube:
     image: sonarqube:latest
@@ -46,23 +58,38 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     network_mode: "host"
 
-  kaddem-app:
-    image: naderouali/kaddem:latest
-    depends_on:
-      - mysql-container  # Ensure MySQL starts first
-    networks:
-      - monitoring_network  # Keep using the monitoring network
-      - kaddem-network
+  #kaddem-app:
+    #image: naderouali/kaddem:latest
+    #depends_on:
+      #- mysql-container  # Ensure MySQL starts first
+    #networks:
+      #- monitoring_network  # Keep using the monitoring network
+      #- kaddem-network
+    #ports:
+      #- "8089:8089"
+    #environment:
+      #- SPRING_PROFILES_ACTIVE=prometheus
+      #- SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/kaddemdb?&createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      #- SPRING_DATASOURCE_USERNAME=root
+      #- SPRING_DATASOURCE_PASSWORD=0000
+
+  kaddem:
+    container_name: kaddem
+    image: naderouali/kaddem:latest  # Use the image from your Docker Hub
     ports:
-      - "8089:8089"
+      - "8089:8089"  # Map port 8089 (as specified in your Spring Boot properties)
     environment:
-      - SPRING_PROFILES_ACTIVE=prometheus
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/kaddemdb?&createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    - SPRING_PROFILES_ACTIVE=prometheus
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/kaddemdb?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=0000
+      - SPRING_DATASOURCE_PASSWORD=0000  # Set the password for MySQL
+    restart: unless-stopped
+    depends_on:
+      - mysql
 
 volumes:
   grafana-storage:
+  db:
 
 networks:
   monitoring_network:
