@@ -116,31 +116,26 @@ pipeline {
                 }
             }
         }
-        stage("SonarQube Analysis") {
+        stage("SonarQube Analysis and Quality Gate") {
             steps {
                 script {
                     // Use the SonarQube environment defined in Jenkins
-                    withSonarQubeEnv('SonarQube') { // 'SonarQube' should match your configured SonarQube Server name
-                        // Set a timeout for the SonarQube analysis to prevent indefinite hanging
-                        timeout(time: 10, unit: 'MINUTES') {
-                            try {
-                                sh "mvn sonar:sonar"
-                            } catch (Exception e) {
-                                echo "SonarQube analysis failed: ${e.getMessage()}"
-                                // Optionally, you can fail the pipeline or allow it to continue
-                                currentBuild.result = 'UNSTABLE'
-                            }
-                        }
+                    withSonarQubeEnv('SonarQube') { // 'SonarQube' should match your SonarQube server name
+                        // Run the SonarQube analysis using Maven
+                        sh "mvn sonar:sonar"
                     }
-                }
-            }
-            post {
-                always {
-                    script {
-                        echo "Publishing SonarQube results..."
-                        // Publish the SonarQube results for visibility in Jenkins, if applicable
-                        // Requires SonarQube Jenkins Plugin
-                        sonarQubePublisher(autoMark: true)
+                    
+                    // Timeout for waiting for the quality gate result
+                    timeout(time: 2, unit: 'MINUTES') {
+                        // Wait for SonarQube quality gate result
+                        def qualityGate = waitForQualityGate()
+        
+                        // Check if the quality gate passed or failed
+                        if (qualityGate.status != 'OK') {
+                            error "Pipeline aborted due to quality gate failure: ${qualityGate.status}"
+                        } else {
+                            echo "Quality gate passed successfully!"
+                        }
                     }
                 }
             }
