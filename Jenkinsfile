@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        // Make sure Maven is installed in Jenkins and referenced here nnn
+        // Make sure Maven is installed in Jenkins and referenced here nnnn
         maven 'M2_HOME' // Adjust the Maven installation to your Jenkins setup
     }
     
