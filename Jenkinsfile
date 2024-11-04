@@ -154,31 +154,7 @@ pipeline {
                 }
             }
         }
-        stage('Upload to Nexus') {
-            steps {
-                script {
-                    echo "Deploying to Nexus..."
-                    nexusArtifactUploader(
-                        nexusVersion: 'nexus3',
-                        protocol: 'http',
-                        nexusUrl: 'localhost:8081',
-                        repository: 'back_end_repo',
-                        credentialsId: 'nexus',
-                        groupId: 'tn.esprit.spring',
-                        version: '0.0.1',
-                        artifacts: [
-                            [
-                                artifactId: 'kaddem',
-                                classifier: '',
-                                file: 'target/kaddem-0.0.1-SNAPSHOT.jar',
-                                type: 'jar'
-                            ]
-                        ]
-                    )
-                    echo "Deployment to Nexus completed!"
-                }
-            }
-        }
+        
         //stage("Build Docker Image") {
             //steps {
                 //script {
