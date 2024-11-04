@@ -80,19 +80,39 @@ pipeline {
                 }
             }
         }
-        stage("Start Grafana and Prometheus") {
-            steps {
-                script {
-                    // Start only Grafana and Prometheus services with network_mode set to host
-                    sh 'docker compose -f ./docker-compose.yml up -d grafana prometheus'
+        //stage("Start Grafana and Prometheus") {
+            //steps {
+                //script {
+                    //// Start only Grafana and Prometheus services with network_mode set to host
+                    //sh 'docker compose -f ./docker-compose.yml up -d grafana prometheus'
+                //}
+            //}
+        //}
+        //stage("Start Docker Compose Services") {
+            //steps {
+                //script {
+                    //// Start all necessary Docker Compose services
+                    //sh 'docker compose -f ./docker-compose.yml up -d'
+                //}
+            //}
+        //}
+        stage("Parallel: Start Grafana and Prometheus & Docker Compose Services") {
+            parallel {
+                stage("Start Grafana and Prometheus") {
+                    steps {
+                        script {
+                            // Start Grafana and Prometheus services
+                            sh 'docker compose -f ./docker-compose.yml up -d grafana prometheus'
+                        }
+                    }
                 }
-            }
-        }
-        stage("Start Docker Compose Services") {
-            steps {
-                script {
-                    // Start all necessary Docker Compose services
-                    sh 'docker compose -f ./docker-compose.yml up -d'
+                stage("Start Docker Compose Services") {
+                    steps {
+                        script {
+                            // Start all necessary Docker Compose services
+                            sh 'docker compose -f ./docker-compose.yml up -d'
+                        }
+                    }
                 }
             }
         }
