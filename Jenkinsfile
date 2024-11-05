@@ -2,8 +2,7 @@ pipeline {
     agent any
 
     tools {
-        // Make sure Maven is installed in Jenkins and referenced here nnnn
-        maven 'M2_HOME' // Adjust the Maven installation to your Jenkins setup
+        maven 'M2_HOME'
     }
     
     environment {
@@ -21,7 +20,6 @@ pipeline {
     }
 
     stages {
-        
         stage("Start SonarQube and Nexus") {
             steps {
                 script {
@@ -33,23 +31,6 @@ pipeline {
                 }
             }
         }
-        
-        //stage("Start Grafana and Prometheus") {
-            //steps {
-                //script {
-                    //// Start only Grafana and Prometheus services with network_mode set to host
-                    //sh 'docker compose -f ./docker-compose.yml up -d grafana prometheus'
-                //}
-            //}
-        //}
-        //stage("Start Docker Compose Services") {
-            //steps {
-                //script {
-                    //// Start all necessary Docker Compose services
-                    //sh 'docker compose -f ./docker-compose.yml up -d'
-                //}
-            //}
-        //}
         stage("Parallel: Start Grafana and Prometheus & Docker Compose Services") {
             parallel {
                 stage("Start Grafana and Prometheus") {
@@ -78,7 +59,7 @@ pipeline {
                 sh "ls -la target/"
             }
         }
-        stage("Run Tests with JUnit") {
+        stage("Run Unit Tests with JUnit and Mockito") {
             steps {
                 // Runs JUnit tests and generates JaCoCo coverage reports
                 sh "mvn test jacoco:report"
@@ -108,39 +89,6 @@ pipeline {
                 }
             }
         }
-        
-        //stage("Build Docker Image") {
-            //steps {
-                //script {
-                    //// Build the Docker image
-                    //sh "docker build -t ${DOCKER_IMAGE_NAME} ."
-                //}
-            //}
-        //}
-        //stage("Push Docker Image to Docker Hub") {
-            //steps {
-                //script {
-                    //try {
-                        //// Ensure the Docker image exists before pushing
-                        //def imageExists = sh(script: "docker images -q ${DOCKER_IMAGE_NAME}", returnStdout: true).trim()
-        
-                        //if (!imageExists) {
-                            //error "Docker image ${DOCKER_IMAGE_NAME} does not exist. Skipping push."
-                        //}
-        
-                        //// Log in to Docker Hub
-                        //sh "echo ${DOCKER_CREDENTIALS_PSW} | docker login -u ${DOCKER_CREDENTIALS_USR} --password-stdin"
-        
-                        //// Push the Docker image
-                        //sh "docker push ${DOCKER_IMAGE_NAME}"
-                        //echo "Successfully pushed Docker image '${DOCKER_IMAGE_NAME}' to Docker Hub."
-                    //} catch (Exception e) {
-                        //echo "Failed to push Docker image: ${e.getMessage()}"
-                        //currentBuild.result = 'FAILURE' // Mark build as failed if push fails
-                    //}
-                //}
-            //}
-        //}
         stage("Parallel: Build and Push Docker Image") {
             parallel {
                 stage("Build Docker Image") {
