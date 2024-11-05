@@ -50,5 +50,35 @@ pipeline {
                 }
             }
         }
+
+        stage('Docker Image') {
+            steps {
+                echo 'Building Docker image for Spring Boot...'
+                sh 'docker build -t omarbenfathallah/kaddemm-app:v1.0.0 -f Dockerfile .'
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                echo 'Logging into DockerHub...'
+                withCredentials([usernamePassword(credentialsId: 'dockerhub',
+                                                  usernameVariable: 'DOCKERHUB_USERNAME', 
+                                                  passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                    sh "docker login -u \$DOCKERHUB_USERNAME -p \$DOCKERHUB_PASSWORD"
+                }
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                echo 'Pushing Docker image to DockerHub...'
+                withCredentials([usernamePassword(credentialsId: 'docker',
+                                                  usernameVariable: 'DOCKERHUB_USERNAME', 
+                                                  passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                    sh "docker push omarbenfathallah/kaddemm-app:v1.0.0"
+                }
+            }
+        }
+
     }
 }
