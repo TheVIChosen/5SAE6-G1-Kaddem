@@ -16,14 +16,12 @@ pipeline {
             steps {
                 echo 'Cleaning previous builds and cache...'
                 sh 'mvn clean'
-                echo 'Clearing cache...'
-                sh 'rm -rf target/'
             }
         }
            stage('Build project') {
             steps {
                 echo 'Building the application...'
-                sh 'mvn package'
+               sh "ls -la target/"
             }
         }
 
