@@ -72,14 +72,14 @@ services:
       #- SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/kaddemdb?&createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
       #- SPRING_DATASOURCE_USERNAME=root
       #- SPRING_DATASOURCE_PASSWORD=0000
-
+      
   kaddem:
     container_name: kaddem
     image: naderouali/kaddem:latest  # Use the image from your Docker Hub
     ports:
       - "8089:8089"  # Map port 8089 (as specified in your Spring Boot properties)
     environment:
-    - SPRING_PROFILES_ACTIVE=prometheus
+      - SPRING_PROFILES_ACTIVE=prometheus
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/kaddemdb?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=0000  # Set the password for MySQL
