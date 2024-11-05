@@ -70,7 +70,7 @@ pipeline {
                         repository: 'back_end_repo',
                         credentialsId: 'nexus',
                         groupId: 'tn.esprit.spring',
-                        version: '1.0.8',
+                        version: '1.0.9',
                         artifacts: [
                             [
                                 artifactId: 'kaddem',
