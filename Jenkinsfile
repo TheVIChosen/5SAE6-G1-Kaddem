@@ -19,13 +19,13 @@ pipeline {
             }
         }
 
-        stage('Status Mysql') {
-            steps {
-                script {
-                    sh 'docker start dbmysql_new'
-                }
-            }
-        }
+      //  stage('Status Mysql') {
+       //     steps {
+       //         script {
+        //            sh 'docker start dbmysql_new'
+        //        }
+       //     }
+     //   }
 
         stage('Clean') {
             steps {
