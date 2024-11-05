@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKERHUB_USERNAME = "admin" 
+         NEXUS_CREDENTIALS = credentials('nexus') 
     }
 
     stages {
@@ -42,6 +43,12 @@ pipeline {
                 }
             }
         }
-        
+        stage("Deploy to Nexus") {
+            steps {
+                script {
+                    sh "mvn deploy -DskipTests -Dnexus.username=${NEXUS_CREDENTIALS_USR} -Dnexus.password=${NEXUS_CREDENTIALS_PSW}"
+                }
+            }
+        }
     }
 }
