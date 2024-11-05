@@ -98,5 +98,13 @@ pipeline {
                 }
             }
         }
+         stage('Docker Compose Up') {
+           steps {
+               echo 'Testing application using Docker Compose...'
+              sh "docker-compose up -d"
+           }
+       }
+
+        
     } // Closing the stages block
 } // Closing the pipeline block
