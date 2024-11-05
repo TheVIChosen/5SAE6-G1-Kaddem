@@ -30,10 +30,10 @@ pipeline {
                 scannerHome = tool 'sonarqubeScanner'
             }
             steps {
-                withCredentials([string(credentialsId: 'sonartoken', variable: 'SONAR_TOKEN')]) {
+                withCredentials([string(credentialsId: 'sonar', variable: 'SONAR_TOKEN')]) {
                     withSonarQubeEnv('Sonarqube') {
                         sh "${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.projectKey=springproject \
+                            -Dsonar.projectKey=kaddemomar \
                             -Dsonar.java.binaries=target/classes \
                             -Dsonar.sources=src/main/java \
                             -Dsonar.host.url=http://10.0.2.15:9002 \
