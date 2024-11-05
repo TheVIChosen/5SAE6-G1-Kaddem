@@ -41,7 +41,7 @@ pipeline {
                     sh 'docker start nexus || echo "Nexus already running"'
                     
                     // Wait for SonarQube to be fully initialized
-                    timeout(time: 5, unit: 'MINUTES') {
+                    timeout(time: 2, unit: 'MINUTES') {
                         waitUntil {
                             def sonarqubeReady = sh(script: "curl -s -o /dev/null -w '%{http_code}' http://localhost:9000", returnStdout: true).trim() == '200'
                             def nexusRunning = sh(script: "docker inspect -f '{{.State.Running}}' nexus", returnStdout: true).trim() == 'true'
