@@ -57,7 +57,7 @@ pipeline {
                         repository: 'maven-kaddem-repository',
                         credentialsId: 'nexus',
                         groupId: 'tn.esprit.spring',
-                        version: '1.2.3',
+                        version: '1.2.4',
                         artifacts: [
                             [
                                 artifactId: 'kaddem',
