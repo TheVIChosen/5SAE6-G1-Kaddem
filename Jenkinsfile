@@ -1,8 +1,8 @@
 pipeline {
     agent any
     environment {
-        DOCKERHUB_USERNAME = "admin" 
-         NEXUS_CREDENTIALS = credentials('nexus') 
+        DOCKERHUB_USERNAME = "admin"
+        NEXUS_CREDENTIALS = credentials('nexus') // This assumes you have the correct 'nexus' credentials ID
     }
 
     stages {
@@ -10,23 +10,25 @@ pipeline {
             steps {
                 echo "Start Building Pipeline"
                 git branch: 'omarbenfathallah-5SAE6-G1',
-                url: 'https://github.com/TheVIChosen/5SAE6-G1-Kaddem.git'
+                    url: 'https://github.com/TheVIChosen/5SAE6-G1-Kaddem.git'
             }
         }
-        stage('Clean ') {
+
+        stage('Clean') {
             steps {
                 echo 'Cleaning previous builds and cache...'
                 sh 'mvn clean'
             }
         }
-           stage('Build project') {
+
+        stage('Build project') {
             steps {
                 echo 'Building the application...'
-
-        sh 'mvn package -DskipTests'
+                sh 'mvn package -DskipTests'
             }
         }
-       stage('Static Analysis') {
+
+        stage('Static Analysis') {
             environment {
                 scannerHome = tool 'sonarqubeScanner'
             }
@@ -43,10 +45,13 @@ pipeline {
                 }
             }
         }
-        stage("Deploy to Nexus") {
+
+        stage('Deploy to Nexus') {
             steps {
                 script {
-                    sh "mvn deploy -DskipTests -Dnexus.username=${NEXUS_CREDENTIALS_USR} -Dnexus.password=${NEXUS_CREDENTIALS_PSW}"
+                    withCredentials([usernamePassword(credentialsId: 'nexus', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                        sh "mvn deploy -DskipTests -Dnexus.username=${NEXUS_USERNAME} -Dnexus.password=${NEXUS_PASSWORD}"
+                    }
                 }
             }
         }
@@ -61,9 +66,7 @@ pipeline {
         stage('Docker Login') {
             steps {
                 echo 'Logging into DockerHub...'
-                withCredentials([usernamePassword(credentialsId: 'dockerhub',
-                                                  usernameVariable: 'DOCKERHUB_USERNAME', 
-                                                  passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
                     sh "docker login -u \$DOCKERHUB_USERNAME -p \$DOCKERHUB_PASSWORD"
                 }
             }
@@ -72,20 +75,23 @@ pipeline {
         stage('Docker Push') {
             steps {
                 echo 'Pushing Docker image to DockerHub...'
-                withCredentials([usernamePassword(credentialsId: 'docker',
-                                                  usernameVariable: 'DOCKERHUB_USERNAME', 
-                                                  passwordVariable: 'DOCKERHUB_PASSWORD')]) {
-                    sh "docker push omarbenfathallah/kaddemm-app:v1.0.0"
-                }
-            }
-        }
-        stage('Docker Push') {
-            steps {
-                echo 'testing application ...'
-               
-                    sh "docker composer up -d"
+                sh "docker push omarbenfathallah/kaddemm-app:v1.0.0"
             }
         }
 
+        stage('Docker Compose Up') {
+            steps {
+                echo 'Testing application using Docker Compose...'
+                sh "docker-compose up -d"
+            }
+        }
+
+        // Optional: Clean up Docker containers after the test
+        post {
+            always {
+                echo 'Cleaning up Docker containers...'
+                sh "docker-compose down"
+            }
+        }
     }
 }
