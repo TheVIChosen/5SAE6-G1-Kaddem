@@ -136,8 +136,8 @@ post {
             echo 'Build and tests were successful!'
             emailext(
                 to: 'taycyrsaidi456@gmail.com',
-                from: 'saidi.tayssir@esprit.tn', // Set the sender email address
-                replyTo: 'saidi.tayssir@esprit.tn', // Set the reply-to address
+                from: 'Saidi.Tayssir@esprit.tn', // Set the sender email address
+                replyTo: 'Saidi.Tayssir@esprit.tn', // Set the reply-to address
                 subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - SUCCESS",
                 body: "The build ${env.BUILD_NUMBER} has completed successfully.\nCheck details at: ${env.BUILD_URL}"
             )
@@ -147,8 +147,8 @@ post {
             echo 'Build or tests failed!'
             emailext(
                 to: 'taycyrsaidi456@gmail.com',
-                from: 'saidi.tayssir@esprit.tn', // Set the sender email address
-                replyTo: 'saidi.tayssir@esprit.tn', // Set the reply-to address
+                from: 'Saidi.Tayssir@esprit.tn', // Set the sender email address
+                replyTo: 'Saidi.Tayssir@esprit.tn', // Set the reply-to address
                 subject: "${env.JOB_NAME} - Build #${env.BUILD_NUMBER} - FAILURE",
                 body: "The build ${env.BUILD_NUMBER} has failed.\nCheck details at: ${env.BUILD_URL}"
             )
