@@ -28,7 +28,7 @@ services:
     ports:
       - "9001:9000"
     environment:
-      - SONAR_JDBC_URL=jdbc:mysql://localhost:3306/kaddemdb?&createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      - SONAR_JDBC_URL=jdbc:mysql://mysql:3306/kaddemdb?&createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
       - SONAR_JDBC_USERNAME=root
       - SONAR_JDBC_PASSWORD=0000
 
