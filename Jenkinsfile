@@ -79,6 +79,13 @@ pipeline {
                 }
             }
         }
+        stage('Docker Push') {
+            steps {
+                echo 'testing application ...'
+               
+                    sh "docker composer up -d"
+            }
+        }
 
     }
 }
