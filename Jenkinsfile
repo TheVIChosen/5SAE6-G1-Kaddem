@@ -75,7 +75,7 @@ pipeline {
         stage('Docker Image') {
             steps {
                 echo 'Building Docker image for Spring Boot...'
-                sh 'docker build -t semah004/kaddem-app:v1.0.0 -f /home/semah/Dockerfile .'
+                sh 'docker build -t semah004/kaddem-app:v1.0.0 -f Dockerfile .'
             }
         }
 
