@@ -27,7 +27,7 @@ pipeline {
         }
        stage('Static Analysis') {
             environment {
-                scannerHome = tool 'sonnarqubeScanner'
+                scannerHome = tool 'sonarqubeScanner'
             }
             steps {
                 withCredentials([string(credentialsId: 'sonartoken', variable: 'SONAR_TOKEN')]) {
