@@ -20,5 +20,13 @@ pipeline {
                 sh 'rm -rf target/'
             }
         }
+           stage('Build project') {
+            steps {
+                echo 'Building the application...'
+                sh 'mvn package'
+            }
+        }
+
+        
     }
 }
