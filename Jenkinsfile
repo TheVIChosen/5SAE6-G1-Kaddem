@@ -79,19 +79,13 @@ pipeline {
             }
         }
 
-        stage('Docker Compose Up') {
-            steps {
-                echo 'Testing application using Docker Compose...'
-                sh "docker-compose up -d"
-            }
-        }
+      //  stage('Docker Compose Up') {
+        //    steps {
+         //       echo 'Testing application using Docker Compose...'
+         //       sh "docker-compose up -d"
+          //  }
+       // }
 
-        // Optional: Clean up Docker containers after the test
-        post {
-            always {
-                echo 'Cleaning up Docker containers...'
-                sh "docker-compose down"
-            }
-        }
+       
     }
 }
