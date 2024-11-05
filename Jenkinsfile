@@ -12,7 +12,7 @@ pipeline {
                 url: 'https://github.com/TheVIChosen/5SAE6-G1-Kaddem.git'
             }
         }
-        stage('Clean and Build') {
+        stage('Clean ') {
             steps {
                 echo 'Cleaning previous builds and cache...'
                 sh 'mvn clean'
@@ -21,7 +21,7 @@ pipeline {
            stage('Build project') {
             steps {
                 echo 'Building the application...'
-               sh "ls -la target/"
+                sh 'mvn package'
             }
         }
 
