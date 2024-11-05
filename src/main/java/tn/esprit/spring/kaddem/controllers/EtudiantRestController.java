@@ -1,6 +1,7 @@
 package tn.esprit.spring.kaddem.controllers;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.spring.kaddem.entities.Etudiant;
@@ -11,6 +12,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/etudiant")
+@Slf4j
 public class EtudiantRestController {
 	@Autowired
 	IEtudiantService etudiantService;
@@ -18,6 +20,9 @@ public class EtudiantRestController {
 	@GetMapping("/retrieve-all-etudiants")
 	public List<Etudiant> getEtudiants() {
 		List<Etudiant> listEtudiants = etudiantService.retrieveAllEtudiants();
+		if (listEtudiants.isEmpty()) {
+			log.warn("No students found");
+		}
 		return listEtudiants;
 	}
 	// http://localhost:8089/Kaddem/etudiant/retrieve-etudiant/8

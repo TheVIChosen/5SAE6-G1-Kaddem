@@ -29,10 +29,11 @@ public class EtudiantServiceImpl implements IEtudiantService{
 	EquipeRepository equipeRepository;
     @Autowired
     DepartementRepository departementRepository;
-	public List<Etudiant> retrieveAllEtudiants(){
-	return (List<Etudiant>) etudiantRepository.findAll();
+	@Override
+	public List<Etudiant> retrieveAllEtudiants() {
+		log.info("Retrieving all students");
+		return (List<Etudiant>) etudiantRepository.findAll();
 	}
-
 	public Etudiant addEtudiant (Etudiant e){
 		return etudiantRepository.save(e);
 	}
