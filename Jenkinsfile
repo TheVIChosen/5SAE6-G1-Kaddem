@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKERHUB_USERNAME = "" 
+        DOCKERHUB_USERNAME = "semah004" 
     }
 
     stages {
