@@ -12,8 +12,8 @@ pipeline {
         }
         stage('GIT Checkout') {
             steps {
-                git branch: 'master',
-                url: 'https://github.com/SaidiTA/5SAE6_G1_Kaddem'
+                git branch: 'NaskiSemah_SAE6_G1',
+                url: 'https://github.com/TheVIChosen/5SAE6-G1-Kaddem.git'
             }
         }
 
