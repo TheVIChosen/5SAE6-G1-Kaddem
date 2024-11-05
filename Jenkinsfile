@@ -52,62 +52,7 @@ pipeline {
             }
         }
         //stage("Start SonarQube and Nexus") {
-        stage("Run Spring Boot Application as Docker Container") {
-    steps {
-        script {
-            // Pull the latest image from Docker Hub
-            sh "docker pull ${DOCKER_IMAGE_NAME}"
-
-            // Step 1: Check if a container is already running with the same image
-            def existingContainerId = sh(script: "docker ps -q --filter 'ancestor=${DOCKER_IMAGE_NAME}'", returnStdout: true).trim()
-            
-            if (existingContainerId) {
-                echo "Container with image '${DOCKER_IMAGE_NAME}' is already running with ID ${existingContainerId}. Skipping start."
-            } else {
-                // If no container is running, proceed to start a new one
-                echo "No existing container found for '${DOCKER_IMAGE_NAME}'. Starting a new container on port 8089."
-                
-                def assignedPort = "8089" // Default port
-                int maxRetries = 3
-                int retries = 0
-                boolean started = false
-
-                // Attempt to start the container with retries in case of port conflict
-                while (!started && retries < maxRetries) {
-                    try {
-                        // Check if the port is free using Docker
-                        def portInUse = sh(script: "docker ps --filter 'publish=${assignedPort}' -q", returnStdout: true).trim()
-                        if (portInUse) {
-                            echo "Port ${assignedPort} is already in use by container ${portInUse}. Assigning a different port."
-                            assignedPort = (Integer.parseInt(assignedPort) + 1).toString()
-                            echo "Trying new port: ${assignedPort}"
-                        } else {
-                            echo "Port ${assignedPort} is free. Running container on port ${assignedPort}."
-                        }
-
-                        // Run the container on the selected port
-                        echo "Attempting to start container '${DOCKER_IMAGE_NAME}' on port ${assignedPort} (Attempt ${retries + 1})"
-                        sh "docker run -d -p ${assignedPort}:8089 ${DOCKER_IMAGE_NAME}"
-                        started = true // If successful, exit the loop
-
-                    } catch (Exception e) {
-                        // If starting the container fails, retry with a new port
-                        echo "Failed to start container on port ${assignedPort}. Retrying with a different port."
-                        assignedPort = (Integer.parseInt(assignedPort) + 1).toString()
-                        retries++
-                    }
-                }
-
-                // If the container did not start after max retries, fail the build
-                if (!started) {
-                    error "Failed to start container after ${maxRetries} attempts."
-                } else {
-                    echo "Container started successfully on port ${assignedPort}."
-                }
-            }
-        }
-    }
-}    //steps {
+            //steps {
                 //script {
                     //// Start existing SonarQube and Nexus containers without creating new ones
                     //sh 'docker start sonarqube'
