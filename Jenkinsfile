@@ -21,36 +21,7 @@ pipeline {
     }
 
     stages {
-        stage("Start MySQL") {
-            steps {
-                script {
-                    // Check if MySQL container with the specified name is running
-                    def mysqlRunning = sh(script: "docker ps --filter 'name=${MYSQL_CONTAINER_NAME}' --filter 'status=running' -q", returnStdout: true).trim()
-                    
-                    // Check if a MySQL container exists (running or stopped)
-                    def mysqlExists = sh(script: "docker ps -a --filter 'name=${MYSQL_CONTAINER_NAME}' -q", returnStdout: true).trim()
         
-                    if (mysqlRunning) {
-                        echo "MySQL container is already running"
-                    } else if (mysqlExists) {
-                        echo "MySQL container exists but is stopped. Starting it..."
-                        sh "docker start ${MYSQL_CONTAINER_NAME}"
-                    } else {
-                        echo "MySQL container does not exist. Creating and starting a new one"
-                        sh """
-                        docker run --name ${MYSQL_CONTAINER_NAME} \
-                            -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} \
-                            -e MYSQL_DATABASE=${MYSQL_DATABASE} \
-                            -p ${MYSQL_PORT}:3306 \
-                            -d ${MYSQL_IMAGE}
-                        """
-                    }
-                    // Check MySQL logs for issues
-                    echo "Checking MySQL logs..."
-                    sh "docker logs ${MYSQL_CONTAINER_NAME} || echo 'No logs available'"
-                }
-            }
-        }
         //stage("Start SonarQube and Nexus") {
             //steps {
                 //script {
