@@ -22,38 +22,18 @@ pipeline {
 
     stages {
         
-        //stage("Start SonarQube and Nexus") {
-            //steps {
-                //script {
-                    //// Start existing SonarQube and Nexus containers without creating new ones
-                    //sh 'docker start sonarqube'
-                    //sh 'docker start nexus'
-                    //// Wait a few seconds to ensure the services are fully started
-                    //sleep 30
-                //}
-            //}
-        //}
         stage("Start SonarQube and Nexus") {
             steps {
                 script {
-                    echo 'Attempting to start SonarQube and Nexus...'
-                    // Start existing SonarQube and Nexus containers if they are not already running
-                    sh 'docker start sonarqube || echo "SonarQube already running"'
-                    sh 'docker start nexus || echo "Nexus already running"'
-                    
-                    // Wait for SonarQube to be fully initialized
-                    timeout(time: 2, unit: 'MINUTES') {
-                        waitUntil {
-                            echo 'Checking SonarQube availability...'
-                            def sonarqubeReady = sh(script: "curl -s -o /dev/null -w '%{http_code}' http://localhost:9000", returnStdout: true).trim() == '200'
-                            def nexusRunning = sh(script: "docker inspect -f '{{.State.Running}}' nexus", returnStdout: true).trim() == 'true'
-                            return sonarqubeReady && nexusRunning
-                        }
-                    }
-                    echo 'SonarQube and Nexus started successfully.'
+                    // Start existing SonarQube and Nexus containers without creating new ones
+                    sh 'docker start sonarqube'
+                    sh 'docker start nexus'
+                    // Wait a few seconds to ensure the services are fully started
+                    sleep 30
                 }
             }
         }
+        
         //stage("Start Grafana and Prometheus") {
             //steps {
                 //script {
