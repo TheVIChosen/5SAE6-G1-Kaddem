@@ -25,7 +25,23 @@ pipeline {
         sh 'mvn package -DskipTests'
             }
         }
-
+       stage('Static Analysis') {
+            environment {
+                scannerHome = tool 'sonnarqubeScanner'
+            }
+            steps {
+                withCredentials([string(credentialsId: 'sonartoken', variable: 'SONAR_TOKEN')]) {
+                    withSonarQubeEnv('Sonarqube') {
+                        sh "${scannerHome}/bin/sonar-scanner \
+                            -Dsonar.projectKey=springproject \
+                            -Dsonar.java.binaries=target/classes \
+                            -Dsonar.sources=src/main/java \
+                            -Dsonar.host.url=http://10.0.2.15:9002 \
+                            -Dsonar.login=${SONAR_TOKEN}"
+                    }
+                }
+            }
+        }
         
     }
 }
