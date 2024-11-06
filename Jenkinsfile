@@ -41,6 +41,13 @@ pipeline {
             }
         }
 
+	stage('OWASP SCAN'){
+		steps{
+				dependencyCheck additionalArguments: '', odcInstallation: 'DP-check'
+				dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+		}
+	}
+
         stage('Static Analysis') {
             environment {
                 scannerHome = tool 'sonnarqubeScanner'
