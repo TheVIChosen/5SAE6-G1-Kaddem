@@ -110,6 +110,12 @@ pipeline {
             }
         }
 
+	     stage('Trivy') {
+            steps {
+                sh 'trivy image springboot-app:v1.0.0 '
+            }
+        }
+
         stage('Docker Push') {
             steps {
                 echo 'Pushing Docker image to DockerHub...'
