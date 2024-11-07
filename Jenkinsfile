@@ -29,6 +29,19 @@ pipeline {
             }
         }
 
+        stage("Run Unit Tests with JUnit and Mockito") {
+            steps {
+                // Runs JUnit tests and generates JaCoCo coverage reports
+                sh "mvn test jacoco:report"
+            }
+            post {
+                // Publish JUnit test results in Jenkins
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
+        }
+
         stage('Static Analysis') {
             environment {
                 scannerHome = tool 'sonarqubeScanner'
