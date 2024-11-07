@@ -9,8 +9,9 @@ pipeline {
         stage('Initialization') {
             steps {
                 echo "Start Building Pipeline"
-                git branch: 'omarbenfathallah-5SAE6-G1',
-                    url: 'git@github.com:TheVIChosen/5SAE6-G1-Kaddem.git'
+                git url: 'git@github.com:TheVIChosen/5SAE6-G1-Kaddem.git',
+                    credentialsId: 'git',
+                    branch: 'omarbenfathallah-5SAE6-G1',
             }
         }
 
