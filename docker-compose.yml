@@ -1,5 +1,5 @@
 services:
-  Kaddemsemah:
+  Kaddemmsemah:
     container_name: Kaddem
     image: semah004/kaddem-app:v1.0.0  # Use the image from your Docker Hub
     ports:
