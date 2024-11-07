@@ -11,7 +11,7 @@ pipeline {
                 echo "Start Building Pipeline"
                 git url: 'git@github.com:TheVIChosen/5SAE6-G1-Kaddem.git',
                     credentialsId: 'git',
-                    branch: 'omarbenfathallah-5SAE6-G1',
+                    branch: 'omarbenfathallah-5SAE6-G1'
             }
         }
 
