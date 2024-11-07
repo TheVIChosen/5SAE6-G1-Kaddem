@@ -113,6 +113,14 @@ pipeline {
                 }
             }
         }
+        stage('Docker Compose Up') {
+           steps {
+               echo 'Testing application using Docker Compose...'
+           
+              sh " docker-compose up -d --remove-orphans"
+
+           }
+       }
 
 
         
