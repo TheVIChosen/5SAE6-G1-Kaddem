@@ -1,7 +1,7 @@
 pipeline {
     agent any
       environment {
-            NEXUS_CREDENTIALS = credentials('nexusellyssa')
+            NEXUS_CREDENTIALS = credentials('nexus')
 }
     stages {
         stage('Start') {
@@ -63,7 +63,7 @@ pipeline {
          stage('Deploy to Nexus') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'nexusellyssa', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                    withCredentials([usernamePassword(credentialsId: 'nexus', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
                         sh "mvn deploy -DskipTests -Dnexus.username=${NEXUS_USERNAME} -Dnexus.password=${NEXUS_PASSWORD}"
                     }
                 }
