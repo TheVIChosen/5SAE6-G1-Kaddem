@@ -1,37 +1,27 @@
-version: "3.7"
-
 services:
-  mysqldb:
-    image: "mysql:5.7"
-    container_name: dbmysql_new
-    environment:
-      - MYSQL_ALLOW_EMPTY_PASSWORD=yes  # Allow empty password (for dev purposes)
-      - MYSQL_DATABASE=kaddem  # Default database name
-      - MYSQL_ROOT_PASSWORD=root_password  # Set root password for MySQL
+  Kaddem:
+    container_name: Kaddem
+    image: saiditayssir/springboot-app:v1.0.0  # Use the image from your Docker Hub
     ports:
-      - "3306:3306"  # Map MySQL port
-    volumes:
-      - db:/var/lib/mysql  # Persist MySQL data
-
-  app-timesheet:
+      - "8089:8089"  # Map port 8089 (as specified in your Spring Boot properties)
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://dbmysql:3306/kaddem?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCom>      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root  # Set the password for MySQL
+    restart: unless-stopped
     depends_on:
-      - mysqldb  # Wait for MySQL to start before the app
-    build:
-      context: .  # Use the Dockerfile in the current directory
-      dockerfile: Dockerfile  # Specify Dockerfile if named differently
-    restart: on-failure  # Restart policy
-    ports:
-      - "8089:8089"  # Map application port
+      - dbmysql
+
+  dbmysql:
+    image: "mysql:5.7"
+    container_name: dbmysql
     environment:
-      SPRING_APPLICATION_JSON: '{
-        "spring.datasource.url": "jdbc:mysql://mysqldb:3306/kaddem?createDatabaseIfNotExist=true",
-        "spring.datasource.username": "root",
-        "spring.datasource.password": "",
-        "spring.jpa.properties.hibernate.dialect": "org.hibernate.dialect.MySQL5InnoDBDialect",
-        "spring.jpa.hibernate.ddl-auto": "update"
-      }'
-    stdin_open: true  # Keep STDIN open
-    tty: true  # Allocate a pseudo-TTY
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=kaddem  # Use your database name
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    volumes:
+      - db:/var/lib/mysql  # Persistent storage for MySQL
 
 volumes:
   db:  # Declare a volume for MySQL data
