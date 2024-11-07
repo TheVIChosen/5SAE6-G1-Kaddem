@@ -21,4 +21,5 @@ services:
       - "3306:3306"
     restart: unless-stopped
     volumes:
-     db: # Persistent storage for MySQL
+   //  db: # Persistent storage for MySQL
+   db_data:
