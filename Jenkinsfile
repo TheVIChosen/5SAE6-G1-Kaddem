@@ -57,7 +57,7 @@ pipeline {
                         repository: 'maven-kaddem-repository',
                         credentialsId: 'nexus',
                         groupId: 'tn.esprit.spring',
-                        version: '1.3.0',
+                        version: '1.3.1',
                         artifacts: [
                             [
                                 artifactId: 'kaddem',
@@ -101,7 +101,7 @@ pipeline {
          stage('Docker Compose Up') {
            steps {
                echo 'Testing application using Docker Compose...'
-              sh "docker-compose -f /docker-compose.yml up -d"
+              sh "docker-compose -f ./docker-compose.yml up -d"
            }
        }
 
