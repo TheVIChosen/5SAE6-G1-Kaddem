@@ -19,14 +19,7 @@ pipeline {
             }
         }
 
-      //  stage('Status Mysql') {
-       //     steps {
-       //         script {
-        //            sh 'docker start dbmysql_new'
-        //        }
-       //     }
-     //   }
-
+    
         stage('Clean') {
             steps {
                 echo 'Cleaning previous builds and cache...'
@@ -128,14 +121,14 @@ pipeline {
         }
 	
 
-	//stage('Docker compose (BackEnd MySql)') {
-       //     steps {
-       //         script {
-       //             sh 'docker stop dbmysql_new'
-        //            sh 'docker compose up -d'
-       //         }
-       //     }
-      //  }
+	stage('Docker compose BackEnd') {
+          steps {
+               script {
+               //    sh 'docker stop dbmysql_new'
+                   sh 'docker compose up -d'
+              }
+           }
+     }
 
 
         stage('Slack Notification') {
