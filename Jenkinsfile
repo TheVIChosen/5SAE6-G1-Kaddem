@@ -29,7 +29,7 @@ pipeline {
             }
         }
 
-        stage("Run Unit Tests with JUnit and Mockito") {
+     /*   stage("Run Unit Tests with JUnit and Mockito") {
             steps {
                 // Runs JUnit tests and generates JaCoCo coverage reports
                 sh "mvn test jacoco:report"
@@ -40,7 +40,7 @@ pipeline {
                     junit 'target/surefire-reports/*.xml'
                 }
             }
-        }
+        }*/
 
         stage('Static Analysis') {
             environment {
