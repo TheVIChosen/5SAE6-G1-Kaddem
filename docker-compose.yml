@@ -1,0 +1,29 @@
+services:
+  Kaddemdevops:
+    container_name: Kaddem
+    image: ellyssa/kaddem-app:v1.0.0  # Use the image from your Docker Hub
+    ports:
+      - "8089:8089"  # Map port 8089 (as specified in your Spring Boot properties)
+    environment:
+      # Set the password for MySQL
+      - SPRING_DATASOURCE_URL=jdbc:mysql://dbmysql:3306/kaddem?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCom
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    restart: unless-stopped
+    depends_on:
+      - dbmysql
+
+  dbmysql:
+    image: "mysql:5.7"
+    container_name: dbmysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=kaddem  # Use your database name
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    volumes:
+      - db:/var/lib/mysql
+      
+volumes:
+  db: {}  
