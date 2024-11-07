@@ -50,7 +50,7 @@ pipeline {
                 withCredentials([string(credentialsId: 'sonartoken', variable: 'SONAR_TOKEN')]) {
                     withSonarQubeEnv('Sonarqube') {
                         sh "${scannerHome}/bin/sonar-scanner \
-                            -Dsonar.projectKey=kaddemomar \
+                            -Dsonar.projectKey=springproject \
                             -Dsonar.java.binaries=target/classes \
                             -Dsonar.sources=src/main/java \
                             -Dsonar.host.url=http://10.0.2.15:9002 \
