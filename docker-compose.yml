@@ -5,9 +5,10 @@ services:
     ports:
       - "8089:8089"  # Map port 8089 (as specified in your Spring Boot properties)
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://dbmysql:3306/kaddem?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCom>      - SPRING_DATASOURCE_USERNAME=root
+      # Set the password for MySQL
+      - SPRING_DATASOURCE_URL=jdbc:mysql://dbmysql:3306/kaddem?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCom
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root  # Set the password for MySQL
+      - SPRING_DATASOURCE_PASSWORD=root
     restart: unless-stopped
     depends_on:
       - dbmysql
