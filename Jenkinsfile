@@ -10,12 +10,12 @@ pipeline {
                 echo "Start Building Pipeline"
             }
         }
-        stage('GIT Checkout') {
-            steps {
-                git branch: 'NaskiSemah_SAE6_G1',
-                url: 'https://github.com/TheVIChosen/5SAE6-G1-Kaddem.git'
-            }
-        }
+        //stage('GIT Checkout') {
+            //steps {
+                //git branch: 'NaskiSemah_SAE6_G1',
+                //url: 'https://github.com/TheVIChosen/5SAE6-G1-Kaddem.git'
+            //}
+        //}
 
         stage('Clean') {
             steps {
