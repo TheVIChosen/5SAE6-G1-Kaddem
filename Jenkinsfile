@@ -109,7 +109,7 @@ pipeline {
                 echo 'Pushing Docker image to DockerHub...'
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', 
                   usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
-                    sh "docker push semah004/kaddem-app:v1.0.0"
+                    sh "docker push ellyssa378/kaddemdevops-app:v1.0.0"
                 }
             }
         }
