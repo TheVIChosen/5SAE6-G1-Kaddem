@@ -15,6 +15,7 @@ services:
     image: "mysql:5.7"
     container_name: dbmysql
     environment:
+      - MYSQL_ROOT_USERNAME=root
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=kaddem  # Use your database name
     ports:
