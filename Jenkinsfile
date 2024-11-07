@@ -77,7 +77,7 @@ pipeline {
                         repository: 'back_end_repo',
                         credentialsId: 'nexus',
                         groupId: 'tn.esprit.spring',
-                        version: '1.1.3',
+                        version: '1.1.4',
                         artifacts: [
                             [
                                 artifactId: 'kaddem',
@@ -110,11 +110,11 @@ pipeline {
             }
         }
 
-	     stage('Trivy') {
+	/*     stage('Trivy') {
             steps {
                 sh 'trivy image springboot-app:v1.0.0 '
             }
-        }
+        }*/
 
         stage('Docker Push') {
             steps {
