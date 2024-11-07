@@ -25,4 +25,5 @@ services:
       
   volumes:
     db:
+    driver: local
       # Persistent storage for MySQL
