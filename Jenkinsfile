@@ -70,7 +70,7 @@ pipeline {
                     }
                 }
             }
-        }
+        
           stage('Docker Image') {
             steps {
                 echo 'Building Docker image for Spring Boot...'
