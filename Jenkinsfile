@@ -6,14 +6,20 @@ pipeline {
     }
 
     stages {
-        stage('Initialization') {
+        stage('Get Started') {
             steps {
                 echo "Start Building Pipeline"
+            }
+        }
+
+        stage("Clone from Git") {
+            steps {
                 git url: 'git@github.com:TheVIChosen/5SAE6-G1-Kaddem.git',
                     credentialsId: 'git',
                     branch: 'omarbenfathallah-5SAE6-G1'
             }
         }
+       
 
         stage('Clean') {
             steps {
