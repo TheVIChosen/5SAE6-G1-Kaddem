@@ -1,7 +1,8 @@
 pipeline {
     agent any
-
-
+      environment {
+            NEXUS_CREDENTIALS = credentials('nexus')
+}
     stages {
         stage('Start') {
             steps {
