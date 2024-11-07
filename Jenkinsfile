@@ -10,7 +10,7 @@ pipeline {
             steps {
                 echo "Start Building Pipeline"
                 git branch: 'omarbenfathallah-5SAE6-G1',
-                    url: 'https://github.com/TheVIChosen/5SAE6-G1-Kaddem.git'
+                    url: 'git@github.com:TheVIChosen/5SAE6-G1-Kaddem.git'
             }
         }
 
