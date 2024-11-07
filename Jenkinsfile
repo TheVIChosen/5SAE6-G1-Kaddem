@@ -60,16 +60,31 @@ pipeline {
         }
 
       
-         stage('Deploy to Nexus') {
+         stage('Upload to Nexus') {
             steps {
                 script {
-                   withCredentials([usernamePassword(credentialsId: 'nexus', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
-    sh 'mvn deploy -DskipTests -Dnexus.username=$NEXUS_USERNAME -Dnexus.password=$NEXUS_PASSWORD'
-}
-
-                    }
+                    echo "Deploying ..."
+                    nexusArtifactUploader(
+                        nexusVersion: 'nexus3',
+                        protocol: 'http',
+                        nexusUrl: '192.168.33.10:8081',
+                        repository: 'repo',
+                        credentialsId: 'nexus',
+                        groupId: 'tn.esprit.spring',
+                        version: '1.0.0',
+                        artifacts: [
+                            [
+                                artifactId: 'kaddem',
+                                classifier: '',
+                                file: 'target/kaddem-0.0.1-SNAPSHOT.jar',
+                                type: 'jar'
+                            ]
+                        ]
+                    )
+                    echo "Deployment succesfully!"
                 }
             }
+        }
         
           stage('Docker Image') {
             steps {
