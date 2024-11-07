@@ -23,7 +23,5 @@ services:
     volumes:
       - db:/var/lib/mysql
       
-  volumes:
-    db:
-    driver: local
-      # Persistent storage for MySQL
+volumes:
+  db: {}  
