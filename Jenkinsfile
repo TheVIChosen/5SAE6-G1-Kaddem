@@ -58,32 +58,45 @@ pipeline {
             }
         }
 
-        stage('Upload to Nexus') {
+      
+         stage('Deploy to Nexus') {
             steps {
                 script {
-                    echo "Deploying to Nexus..."
-
-                    nexusArtifactUploader(
-                        nexusVersion: 'nexus3',
-                        protocol: 'http',
-                        nexusUrl: '192.168.33.10:8081',
-                        repository: 'maven-kaddem-repository',
-                        credentialsId: 'nexus',
-                        groupId: 'tn.esprit.spring',
-                        version: '1.0.2',
-                        artifacts: [
-                            [
-                                artifactId: 'kaddem',
-                                classifier: '',
-                                file: 'target/kaddem-0.0.1-SNAPSHOT.jar',
-                                type: 'jar'
-                            ]
-                        ]
-                    )
-
-                    echo "Deployment to Nexus completed!"
+                    withCredentials([usernamePassword(credentialsId: 'nexus', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+                        sh "mvn deploy -DskipTests -Dnexus.username=${NEXUS_USERNAME} -Dnexus.password=${NEXUS_PASSWORD}"
+                    }
                 }
             }
         }
+          stage('Docker Image') {
+            steps {
+                echo 'Building Docker image for Spring Boot...'
+                sh 'docker build -t ellyssa378/kaddemdevops-app:v1.0.0 -f Dockerfile .'
+            }
+        }
+        
+
+        stage('Docker Login') {
+            steps {
+                echo 'Logging into DockerHub...'
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', 
+                  usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                    sh "docker login -u \$DOCKERHUB_USERNAME -p \$DOCKERHUB_PASSWORD"
+                }
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                echo 'Pushing Docker image to DockerHub...'
+                withCredentials([usernamePassword(credentialsId: 'dockerhub', 
+                  usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                    sh "docker push semah004/kaddem-app:v1.0.0"
+                }
+            }
+        }
+
+
+        
     } // Fin de stages
 } // Fin de pipeline
