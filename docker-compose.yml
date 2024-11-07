@@ -5,15 +5,15 @@ services:
     ports:
       - "8089:8089"  # Map port 8089 (as specified in your Spring Boot properties)
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/kaddem?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCom>      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_URL=jdbc:mysql://dbmysql:3306/kaddem?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCom>      - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root  # Set the password for MySQL
     restart: unless-stopped
     depends_on:
-      - mysql
+      - dbmysql
 
-  mysql:
+  dbmysql:
     image: "mysql:5.7"
-    container_name: mysql
+    container_name: dbmysql
     environment:
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_DATABASE=kaddem  # Use your database name
