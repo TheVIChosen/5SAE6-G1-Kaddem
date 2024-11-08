@@ -4,12 +4,7 @@ pipeline {
         DOCKERHUB_USERNAME = "saiditayssir"
     }
 
-    stages {
-        stage('Get Started') {
-            steps {
-                echo "Start Building Pipeline"
-            }
-        }
+
 
         stage("Clone from Git") {
             steps {
@@ -81,7 +76,7 @@ pipeline {
                         repository: 'back_end_repo',
                         credentialsId: 'nexus',
                         groupId: 'tn.esprit.spring',
-                        version: '1.3.0',
+                        version: '1.0.0',
                         artifacts: [
                             [
                                 artifactId: 'kaddem',
