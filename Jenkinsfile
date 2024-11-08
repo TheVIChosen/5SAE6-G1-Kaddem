@@ -5,7 +5,7 @@ pipeline {
     }
 
 
-
+stages {
         stage("Clone from Git") {
             steps {
                 git url: 'git@github.com:TheVIChosen/5SAE6-G1-Kaddem.git',
