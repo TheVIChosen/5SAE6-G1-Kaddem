@@ -15,7 +15,7 @@ services:
     container_name: mysql
     environment:
       - MYSQL_ROOT_PASSWORD=0000
-      - MYSQL_DATABASE=kaddemdb  # Use your database name
+      - MYSQL_DATABASE=kaddemdb  # Use your database name.
     ports:
       - "3306:3306"
     restart: unless-stopped
