@@ -111,7 +111,7 @@ stages {
 
 	 //   stage('Trivy') {
         //    steps {
-          //      sh 'trivy --skip-update image springboot-app:v1.0.0 '
+          ////      sh 'trivy --skip-update image springboot-app:v1.0.0 '
           //  }
 	//    }
 
