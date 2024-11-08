@@ -140,6 +140,14 @@ pipeline {
               }
            }
      }
+		    stage('Prometheus & Grafana') {
+          steps {
+               script {
+                   sh 'docker start 1517a07aab38'
+                   sh 'docker start 47c63a862074'
+              }
+           }
+     }
 
 
         stage('Slack Notification') {
