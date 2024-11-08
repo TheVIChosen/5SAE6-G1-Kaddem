@@ -116,13 +116,13 @@ pipeline {
             }
         }
 
-       stage('Docker Compose Up') {
-            steps {
-               echo 'Testing application using Docker Compose...'
+      // stage('Docker Compose Up') {
+     ////       steps {
+     //          echo 'Testing application using Docker Compose...'
              // sh "docker compose  -f ./docker-compose.yml up -d kaddemomar"
-                sh "docker-compose up -d"
-          }
-        }
+         //       sh "docker-compose up -d"
+    //      }
+   //     }
 
        
     }
