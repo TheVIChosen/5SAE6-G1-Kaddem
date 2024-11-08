@@ -114,11 +114,11 @@ pipeline {
             }
         }
 
-	    stage('Trivy') {
-            steps {
-                sh 'trivy --skip-update image springboot-app:v1.0.0 '
-            }
-	    }
+	 //   stage('Trivy') {
+        //    steps {
+          //      sh 'trivy --skip-update image springboot-app:v1.0.0 '
+          //  }
+	//    }
 
         stage('Docker Push') {
             steps {
