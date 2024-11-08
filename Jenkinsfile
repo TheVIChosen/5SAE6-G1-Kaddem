@@ -81,7 +81,7 @@ pipeline {
                         repository: 'back_end_repo',
                         credentialsId: 'nexus',
                         groupId: 'tn.esprit.spring',
-                        version: '1.1.9',
+                        version: '1.2.0',
                         artifacts: [
                             [
                                 artifactId: 'kaddem',
