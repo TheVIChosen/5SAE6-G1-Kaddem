@@ -40,7 +40,18 @@ pipeline {
 	//			dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
 	//	}
 	//}
-
+	stage("JUnit and Mockito") {
+            steps {
+                // Runs JUnit tests and generates JaCoCo coverage reports
+                sh "mvn test jacoco:report"
+            }
+            post {
+                // Publish JUnit test results in Jenkins
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
+        }
         stage('Static Analysis') {
             environment {
                 scannerHome = tool 'sonnarqubeScanner'
@@ -70,7 +81,7 @@ pipeline {
                         repository: 'back_end_repo',
                         credentialsId: 'nexus',
                         groupId: 'tn.esprit.spring',
-                        version: '1.1.8',
+                        version: '1.1.9',
                         artifacts: [
                             [
                                 artifactId: 'kaddem',
