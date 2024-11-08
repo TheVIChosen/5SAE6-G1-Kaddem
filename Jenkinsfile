@@ -118,7 +118,7 @@ pipeline {
             steps {
                 sh 'trivy image springboot-app:v1.0.0 '
             }
-        
+	    }
 
         stage('Docker Push') {
             steps {
