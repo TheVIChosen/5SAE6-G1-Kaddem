@@ -29,7 +29,7 @@ stages {
             }
         }
 
-	//stage('OWASP SCAN'){
+	////stage('OWASP SCAN'){
 	//	steps{
 	//////			dependencyCheck additionalArguments: '', odcInstallation: 'DP-check'
 	//			dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
