@@ -15,16 +15,17 @@ stages {
         }
 
     
+      //  stage('Clean') {
+       //     steps {
+         //       echo 'Cleaning previous builds and cache...'
+        //        sh 'mvn clean'
+       //     }
+      //  }
+
         stage('Clean') {
             steps {
-                echo 'Cleaning previous builds and cache...'
-                sh 'mvn clean'
-            }
-        }
-
-        stage('Build') {
-            steps {
                 echo 'Building the Spring Boot application...'
+		sh 'mvn clean'
                 sh 'mvn package'
             }
         }
