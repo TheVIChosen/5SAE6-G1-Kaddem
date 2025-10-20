@@ -118,19 +118,31 @@ class ContratServiceImplTest {
 
     @Test
     void testGetChiffreAffaireEntreDeuxDates() {
-        Date startDate = new Date();
-        Date endDate = new Date();
+        // Dates de l'intervalle
+        Date startDate = new Date(System.currentTimeMillis() - 100000); // il y a un peu de temps
+        Date endDate = new Date(System.currentTimeMillis() + 100000);   // un peu dans le futur
+
+        // Contrats avec des dates valides dans l'intervalle
         Contrat c1 = new Contrat();
         c1.setSpecialite(Specialite.IA);
+        c1.setDateDebutContrat(new Date(System.currentTimeMillis() - 50000));
+        c1.setDateFinContrat(new Date(System.currentTimeMillis() + 50000));
+
         Contrat c2 = new Contrat();
         c2.setSpecialite(Specialite.CLOUD);
+        c2.setDateDebutContrat(new Date(System.currentTimeMillis() - 50000));
+        c2.setDateFinContrat(new Date(System.currentTimeMillis() + 50000));
+
         List<Contrat> contrats = Arrays.asList(c1, c2);
 
         Mockito.when(contratRepository.findAll()).thenReturn(contrats);
 
+        // Appel de la méthode testée
         float result = contratService.getChiffreAffaireEntreDeuxDates(startDate, endDate);
 
-        Assertions.assertTrue(result > 0);
+        // Vérification
+        Assertions.assertTrue(result > 0, "Le chiffre d'affaire devrait être supérieur à 0");
         Mockito.verify(contratRepository, Mockito.times(1)).findAll();
     }
+
 }
