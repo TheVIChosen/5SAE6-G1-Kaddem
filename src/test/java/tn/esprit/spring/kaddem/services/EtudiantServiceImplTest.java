@@ -19,7 +19,7 @@ import tn.esprit.spring.kaddem.repositories.EtudiantRepository;
 
 import java.util.Optional;
 
-@AllArgsConstructor
+
 public class EtudiantServiceImplTest {
     @InjectMocks
     private EtudiantServiceImpl etudiantService;

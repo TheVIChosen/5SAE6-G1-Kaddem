@@ -19,7 +19,6 @@ import tn.esprit.spring.kaddem.entities.Niveau;
 import tn.esprit.spring.kaddem.repositories.EquipeRepository;
 
 
-@AllArgsConstructor
 class EquipeServiceImplTest {
 
     @Mock

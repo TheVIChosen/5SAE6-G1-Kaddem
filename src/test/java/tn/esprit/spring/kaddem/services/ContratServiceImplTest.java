@@ -1,7 +1,5 @@
 package tn.esprit.spring.kaddem.services;
 
-
-import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,21 +18,20 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
-public class ContratServiceImplTest {
+class ContratServiceImplTest {
 
     @InjectMocks
-    private ContratServiceImpl contratService;
+    private ContratServiceImpl contratService; // Service testé
 
     @Mock
-    private ContratRepository contratRepository;
+    private ContratRepository contratRepository; // Mock
 
     @Mock
-    private EtudiantRepository etudiantRepository;
+    private EtudiantRepository etudiantRepository; // Mock
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        MockitoAnnotations.openMocks(this); // Initialisation des mocks
     }
 
     @Test
@@ -111,7 +108,7 @@ public class ContratServiceImplTest {
         Mockito.when(etudiantRepository.findByNomEAndPrenomE(nomE, prenomE)).thenReturn(e);
         Mockito.when(contratRepository.findByIdContrat(idContrat)).thenReturn(c);
 
-        c.setEtudiant(e); // Simule l'affectation du contrat à l'étudiant
+        c.setEtudiant(e); // Simule l'affectation
 
         Contrat result = contratService.affectContratToEtudiant(idContrat, nomE, prenomE);
 
@@ -133,8 +130,7 @@ public class ContratServiceImplTest {
 
         float result = contratService.getChiffreAffaireEntreDeuxDates(startDate, endDate);
 
-        // Logique pour calculer le chiffre d'affaires basé sur les spécialités
-        Assertions.assertTrue(result > 0); // Vérifie qu'il y a un chiffre d'affaires calculé
+        Assertions.assertTrue(result > 0);
         Mockito.verify(contratRepository, Mockito.times(1)).findAll();
     }
 }

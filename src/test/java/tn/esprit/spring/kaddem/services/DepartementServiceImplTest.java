@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-@AllArgsConstructor
 public class DepartementServiceImplTest {
 
     @InjectMocks
