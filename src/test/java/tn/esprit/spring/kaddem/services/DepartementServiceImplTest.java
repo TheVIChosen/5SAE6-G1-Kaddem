@@ -1,4 +1,4 @@
-package tn.esprit.spring.kaddem.services.test;
+package tn.esprit.spring.kaddem.services;
 
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Assertions;
@@ -10,7 +10,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import tn.esprit.spring.kaddem.entities.Departement;
 import tn.esprit.spring.kaddem.repositories.DepartementRepository;
-import tn.esprit.spring.kaddem.services.DepartementServiceImpl;
 
 import java.util.Arrays;
 import java.util.List;

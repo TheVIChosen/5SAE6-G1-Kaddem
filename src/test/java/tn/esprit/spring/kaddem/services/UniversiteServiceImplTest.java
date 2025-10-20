@@ -1,4 +1,4 @@
-package tn.esprit.spring.kaddem.services.test;
+package tn.esprit.spring.kaddem.services;
 
 
 import lombok.AllArgsConstructor;
@@ -13,7 +13,6 @@ import tn.esprit.spring.kaddem.entities.Departement;
 import tn.esprit.spring.kaddem.entities.Universite;
 import tn.esprit.spring.kaddem.repositories.DepartementRepository;
 import tn.esprit.spring.kaddem.repositories.UniversiteRepository;
-import tn.esprit.spring.kaddem.services.UniversiteServiceImpl;
 
 import java.util.Arrays;
 import java.util.List;

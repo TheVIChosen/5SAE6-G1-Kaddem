@@ -1,4 +1,4 @@
-package tn.esprit.spring.kaddem.services.test;
+package tn.esprit.spring.kaddem.services;
 
 
 import lombok.AllArgsConstructor;
@@ -14,7 +14,6 @@ import tn.esprit.spring.kaddem.entities.Etudiant;
 import tn.esprit.spring.kaddem.entities.Specialite;
 import tn.esprit.spring.kaddem.repositories.ContratRepository;
 import tn.esprit.spring.kaddem.repositories.EtudiantRepository;
-import tn.esprit.spring.kaddem.services.ContratServiceImpl;
 
 import java.util.Arrays;
 import java.util.Date;

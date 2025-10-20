@@ -1,6 +1,5 @@
-package tn.esprit.spring.kaddem.services.test;
+package tn.esprit.spring.kaddem.services;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import org.mockito.MockitoAnnotations;
 import tn.esprit.spring.kaddem.entities.Equipe;
 import tn.esprit.spring.kaddem.entities.Niveau;
 import tn.esprit.spring.kaddem.repositories.EquipeRepository;
-import tn.esprit.spring.kaddem.services.EquipeServiceImpl;
 
 
 @AllArgsConstructor
