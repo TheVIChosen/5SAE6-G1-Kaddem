@@ -3,6 +3,7 @@ package tn.esprit.spring.kaddem.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -16,10 +17,11 @@ public class Equipe implements Serializable{
     @Enumerated(EnumType.STRING)
     private Niveau niveau;
     //@ManyToMany(mappedBy="equipes")
-    @ManyToMany(cascade =CascadeType.ALL)
 
+    @ManyToMany(cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<Etudiant> etudiants;
+    private Set<Etudiant> etudiants = new HashSet<>(); // <-- initialisation ici
+
     @OneToOne
     private DetailEquipe detailEquipe;
 
