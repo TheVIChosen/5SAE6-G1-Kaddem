@@ -128,6 +128,21 @@
         </plugins>
     </build>
 
+    <!-- Deploy to Nexus -->
+    <distributionManagement>
+        <repository>
+            <id>deploymentRepo</id>
+            <name>Nexus Repository</name>
+            <url>http://192.168.56.10:8081/repository/frstapp-releases/</url> <!-- For release versions -->
+        </repository>
+        <snapshotRepository>
+            <id>deploymentRepo</id>
+            <name>Nexus Repository</name>
+            <url>http://192.168.56.10:8081/repository/frstapp-releases/</url> <!-- For snapshot versions -->
+        </snapshotRepository>
+    </distributionManagement>
+
+
    
 
 </project>
